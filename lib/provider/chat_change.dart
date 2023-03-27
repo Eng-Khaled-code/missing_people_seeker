@@ -3,12 +3,12 @@ import 'package:finalmps/services/chat_services.dart';
 import 'package:finalmps/models/chat_model.dart';
 
 class ChatChange with ChangeNotifier {
-  List<String> _adminsIds = ["no admins"];
-  String _inputStatus = "0";
+  List<String>? adminsIds;
+  String inputStatus = "0";
   ChatServices _chatServices = ChatServices();
-  String _lastDate = "";
-  String _connectStatus = "";
-  String _opensChatPage = "";
+  String lastDate = "";
+  String connectStatus = "";
+  String opensChatPage = "";
 
   ChatChange.initialize() {}
 
@@ -21,24 +21,24 @@ class ChatChange with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadMyAdminsIs(String? userId) async {
-    _adminsIds = await _chatServices.loadMyAdmins(userId);
+  Future<void> loadMyAdminsIds(String? userId) async {
+    adminsIds = await _chatServices.loadMyAdmins(userId);
     notifyListeners();
   }
 
   Future<void> loadInputStatus(String userId, String adminId) async {
-    _inputStatus = await _chatServices.inputStatus(userId, adminId);
+    inputStatus = await _chatServices.inputStatus(userId, adminId);
     notifyListeners();
   }
 
   Future<void> loadAdminOpensMyChatPage(String chatId, String adminId) async {
-    _opensChatPage =
+    opensChatPage =
         await _chatServices.loadAdminOpensMyChatPage(chatId, adminId);
     notifyListeners();
   }
 
   Future<void> loadConnectStatus(String adminId) async {
-    _connectStatus = await _chatServices.loadConnectStatus(adminId);
+    connectStatus = await _chatServices.loadConnectStatus(adminId);
     notifyListeners();
   }
 
@@ -59,12 +59,9 @@ class ChatChange with ChangeNotifier {
 
   Future<void> updateToSeen({String? chatId, String? adminId}) async {
     try {
-      // refuse order value 2
       await _chatServices
-          .updateToSeen(chatId: chatId, adminId: adminId)
-          .then((value) {
-        notifyListeners();
-      });
+          .updateToSeen(chatId: chatId, adminId: adminId);
+      notifyListeners();
     } catch (ex) {
       notifyListeners();
     }
@@ -127,15 +124,4 @@ class ChatChange with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  List<String> get adminsIds => _adminsIds;
-
-  String get getInputStatus => _inputStatus;
-
-  String get getLastDate => _lastDate;
-
-  String get getConnectStatus => _connectStatus;
-
-  String get getOpensMyChatPage => _opensChatPage;
-
-// int get getRecentMessagesCount => _recentMessagesCount;
 }

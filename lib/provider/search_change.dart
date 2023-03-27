@@ -1,7 +1,8 @@
 import 'package:finalmps/models/missed_model.dart';
 import 'package:finalmps/services/search_services.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:finalmps/PL/home/orders/order_suggestions.dart';
+import 'package:finalmps/PL/home/orders/orders_page/order_card/order_suggestions.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SearchChange with ChangeNotifier {
   bool isLoading = false;
@@ -11,7 +12,7 @@ class SearchChange with ChangeNotifier {
 
   SearchServices _searchServices = SearchServices();
 
-  Future<bool> updateSuggestion(
+  Future<void> updateSuggestion(
       {String? orderId, List<String>? ordersIds}) async {
     try {
       isLoading = true;
@@ -22,18 +23,15 @@ class SearchChange with ChangeNotifier {
           .updateSuggestionsToNo(
               collection: MissedModel.REF,
               orderId: orderId,
-              ordersIds: ordersIds)
-          .then((value) {
-        isLoading = false;
-        notifyListeners();
-      });
-
-      return true;
-    } catch (ex) {
-      OrderSuggestions.error = ex.toString();
+              ordersIds: ordersIds);
       isLoading = false;
       notifyListeners();
-      return false;
+      Fluttertoast.showToast(msg: "سوف نقوم بإرسال إقتراحات جديدة لك عند توفر المعلومات المطلوبة",toastLength: Toast.LENGTH_LONG);
+
+    } catch (ex) {
+     Fluttertoast.showToast(msg:ex.toString(),toastLength: Toast.LENGTH_LONG);
+      isLoading = false;
+      notifyListeners();
     }
   }
 

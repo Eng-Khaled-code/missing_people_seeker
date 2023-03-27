@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:finalmps/PL/home/orders/orders_page/order_card/bottom_sheet.dart';
 import 'package:finalmps/services/uploding_orders_image.dart';
-import 'package:finalmps/services/user_services.dart';
+import 'package:finalmps/services/user_services/user_services.dart';
 import 'package:finalmps/services/missed_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:finalmps/services/notify_services.dart';
@@ -12,7 +14,8 @@ import 'package:finalmps/models/missed_model.dart';
 import 'package:finalmps/models/found_model.dart';
 
 import 'package:finalmps/models/user_model.dart';
-import 'package:finalmps/PL/utilites/order_card.dart';
+import 'package:finalmps/PL/home/orders/orders_page/order_card/order_card.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 class MissedChange with ChangeNotifier {
@@ -38,7 +41,7 @@ class MissedChange with ChangeNotifier {
   }
 
   Future<bool> addMissingOrder(
-      {XFile? imageFile,
+      {File? imageFile,
       String? userId,
       String? type,
       String? name,
@@ -80,11 +83,12 @@ class MissedChange with ChangeNotifier {
       await _missedServeces
           .addMissedOrder(docId: docID, data: data)
           .then((value) async {
-        String base64 = base64Encode(File(imageFile.path).readAsBytesSync());
-        String type1 = type == "فقد" ? "missed images" : "found images";
+
+    String base64 = base64Encode(File(imageFile.path).readAsBytesSync());
+     String type1 = type == "فقد" ? "missed images" : "found images";
         String addOrUpdatePhoto = "add";
         Map<String, String> postData = {
-          "image64": base64,
+          "base64": base64,
           "imagename": imageName,
           "type": type1,
           "addOrUpdatePhoto": addOrUpdatePhoto
@@ -109,7 +113,7 @@ class MissedChange with ChangeNotifier {
     }
   }
 
-  Future<bool> addFoundOrder(
+  Future<void> addFoundOrder(
       {String? missedOrderId,
       String? mayBeMissedOrderId,
       String? foundOrderId}) async {
@@ -121,24 +125,26 @@ class MissedChange with ChangeNotifier {
           .addFoundOrder(
               missedOrderId: missedOrderId,
               mayBeMissedOrderId: mayBeMissedOrderId,
-              foundOrderId: foundOrderId)
-          .then((value) async {
-        isLoading = false;
-        notifyListeners();
-      });
-
-      return true;
-    } catch (ex) {
-      OrderCard.error = ex.toString();
+              foundOrderId: foundOrderId);
       isLoading = false;
       notifyListeners();
-      return false;
+      Fluttertoast.showToast(
+          msg: "تمت إضافة هذا الطلب الي شاشة الاشخاص الذين تم العثور عليهم",
+          toastLength: Toast.LENGTH_LONG);
+
+          }on FirebaseException catch (ex) {
+      Fluttertoast.showToast(
+        msg: "خطأ " + ex.message!,
+        toastLength: Toast.LENGTH_LONG,
+      );
+      isLoading = false;
+      notifyListeners();
     }
   }
 
   Future<bool> updateMissingOrderWithImage(
       {String? id,
-      XFile? imageFile,
+      File? imageFile,
       String? name,
       String? gender,
       String? age,
@@ -177,7 +183,7 @@ class MissedChange with ChangeNotifier {
         String type1 = type == "فقد" ? "missed images" : "found images";
         String addOrUpdatePhoto = "update";
         Map<String, String> postData = {
-          "image64": base64,
+          "base64": base64,
           "imagename": imageName,
           "type": type1,
           "addOrUpdatePhoto": addOrUpdatePhoto
@@ -268,7 +274,7 @@ class MissedChange with ChangeNotifier {
 
       return true;
     } catch (ex) {
-      OrderCard.error = ex.toString();
+      Fluttertoast.showToast(msg: ex.toString(),toastLength: Toast.LENGTH_LONG);
       isLoading = false;
       notifyListeners();
       return false;

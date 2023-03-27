@@ -4,32 +4,29 @@ import 'package:finalmps/models/missed_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotifyServices {
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
   late SharedPreferences prefs;
 
-  List<NotifyModel> loadNotificationsList(String? userId) {
-    List<NotifyModel> _notifyList = [];
-    try {
-      _firestore
+  Future<List<NotifyModel>> loadNotificationsList(String? userId) async {
+    List<NotifyModel>? notifyList;
+          QuerySnapshot snapshot=await firestore
           .collection(NotifyModel.REF)
           .doc(userId)
           .collection(NotifyModel.SUB_COLLECTIN_REF)
           .where(NotifyModel.USER_ID, isEqualTo: userId)
-          .get()
-          .then((snapshot) {
-        snapshot.docs.forEach((element) async {
-          NotifyModel _notifyModel = NotifyModel.fromSnapshoot(element);
-          _notifyList.add(_notifyModel);
-        });
-      });
-      return _notifyList;
-    } catch (ex) {
-      return [];
-    }
+          .get();
+
+    snapshot.docs.forEach((element){
+      NotifyModel _notifyModel = NotifyModel.fromSnapshoot(element);
+      notifyList!.add(_notifyModel);
+    });
+
+      return notifyList!;
+
   }
 
   Future<void> updateSeen({String? userId, String? notifyId}) async {
-    await _firestore
+    await firestore
         .collection(NotifyModel.REF)
         .doc(userId)
         .collection(NotifyModel.SUB_COLLECTIN_REF)
@@ -42,6 +39,7 @@ class NotifyServices {
       String? foundOrderId,
       String? secondUserImageUrl,
       String? foundName}) async {
+
     String docId = DateTime.now().millisecondsSinceEpoch.toString();
 
     Map<String, dynamic> values = {
@@ -56,7 +54,7 @@ class NotifyServices {
       NotifyModel.USER_ID: userId,
     };
 
-    await _firestore
+    await firestore
         .collection(NotifyModel.REF)
         .doc(userId)
         .collection(NotifyModel.SUB_COLLECTIN_REF)
@@ -65,26 +63,26 @@ class NotifyServices {
   }
 
   Future<void> deleteNotifys({String? userId, String? orderId}) async {
-    await _firestore
+   QuerySnapshot snapshot=  await firestore
         .collection(NotifyModel.REF)
         .doc(userId)
         .collection(NotifyModel.SUB_COLLECTIN_REF)
         .where("order_id", isEqualTo: orderId)
-        .get()
-        .then((value) async {
-      value.docs.forEach((element) async {
-        await _firestore
+        .get();
+
+      snapshot.docs.forEach((element) async {
+        await firestore
             .collection(NotifyModel.REF)
             .doc(userId)
             .collection(NotifyModel.SUB_COLLECTIN_REF)
             .doc(element.get("notify_id"))
             .delete();
       });
-    });
+
   }
 
   Future<void> deleteNotifyById({String? userId, String? notifyId}) async {
-    await _firestore
+    await firestore
         .collection(NotifyModel.REF)
         .doc(userId)
         .collection(NotifyModel.SUB_COLLECTIN_REF)
@@ -94,22 +92,24 @@ class NotifyServices {
 
   Future<MissedModel> loadOrderData({String? orderId}) async {
     MissedModel _missedModel = MissedModel();
-    await _firestore
+
+    DocumentSnapshot snapshot=await firestore
         .collection(MissedModel.REF)
         .doc(orderId)
-        .get()
-        .then((value) {
-      _missedModel = MissedModel.fromSnapshoot(value);
-    });
+        .get();
+
+      _missedModel = MissedModel.fromSnapshoot(snapshot);
 
     return _missedModel;
   }
 
-  Future<String> notifyCount({String? userId, String? date}) async {
+  Future<String> notifyCount({String? userId}) async {
     String _count = "";
-    if (int.tryParse(date!)! > 0)
+    String date=await loadLastDate(userId: userId);
+
+    if (int.tryParse(date)! > 0)
       try {
-        await _firestore
+        await firestore
             .collection(NotifyModel.REF)
             .doc(userId)
             .collection(NotifyModel.SUB_COLLECTIN_REF)
@@ -121,7 +121,7 @@ class NotifyServices {
       } catch (ex) {}
     else if (int.tryParse(date) == 0) {
       try {
-        await _firestore
+        await firestore
             .collection(NotifyModel.REF)
             .doc(userId)
             .collection(NotifyModel.SUB_COLLECTIN_REF)
@@ -138,7 +138,7 @@ class NotifyServices {
     String _date = "";
 
     try {
-      await _firestore
+      await firestore
           .collection(NotifyModel.REF)
           .doc(userId)
           .get()
@@ -151,16 +151,17 @@ class NotifyServices {
     return _date;
   }
 
+
   Future<void> updateLastDate({String? userId}) async {
     DocumentSnapshot documentSnapshot =
-        await _firestore.collection(NotifyModel.REF).doc(userId).get();
+        await firestore.collection(NotifyModel.REF).doc(userId).get();
     if (documentSnapshot.data() == null) {
-      await _firestore
+      await firestore
           .collection(NotifyModel.REF)
           .doc(userId)
           .set({"last_date": DateTime.now().millisecondsSinceEpoch.toString()});
     } else {
-      await _firestore.collection(NotifyModel.REF).doc(userId).update(
+      await firestore.collection(NotifyModel.REF).doc(userId).update(
           {"last_date": DateTime.now().millisecondsSinceEpoch.toString()});
     }
   }

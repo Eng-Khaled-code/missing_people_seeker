@@ -1,197 +1,100 @@
 import 'package:flutter/material.dart';
-import 'package:finalmps/PL/utilites/gender_widget.dart';
+import 'package:finalmps/PL/utilites/widgets/gender/gender_widget.dart';
 import 'package:finalmps/provider/user_change.dart';
-import 'package:provider/provider.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'dart:io';
+import '../../models/user_model.dart';
+import '../utilites/text_style/text_styles.dart';
+import '../utilites/widgets/cancel_button.dart';
+import '../utilites/widgets/custom_text_field.dart';
 
-class CardItem extends StatefulWidget {
+// ignore: must_be_immutable
+class CardItem extends StatelessWidget {
   final String title;
-  final String data;
-  static String? error;
+  final UserChange? userChange;
+  String? data;
 
-  final String userId;
 
-  CardItem(
-      {Key? key, required this.title, required this.data, required this.userId})
+   CardItem(
+      {Key? key, required this.title,this.data,this.userChange})
       : super(key: key);
 
-  @override
-  _CardItemState createState() => _CardItemState();
-}
-
-class _CardItemState extends State<CardItem> {
+   IconData? cardIcon;
   @override
   Widget build(BuildContext context) {
-    UserChange user = Provider.of<UserChange>(context);
+  cardIcon=
+  title == "الاسم"
+      ? Icons.person
+      : title == "رقم الهاتف"
+      ? Icons.phone
+      : title == "الرقم القومي"
+      ? Icons.confirmation_num
+      : title == "الجنس"
+      ? Icons.group_add
+      : title == "العنوان"
+      ? Icons.location_on
+      : Icons.date_range;
 
-    final _formKey = GlobalKey<FormState>();
-    TextEditingController? _controller;
-    widget.title == "الجنس"
-        ? GenderRadioButtonState.gender = "${widget.data}"
-        : _controller = TextEditingController(text: "${widget.data}");
+    title == "الجنس"
+        ? GenderRadioButtonState.gender = data:(){};
 
     return InkWell(
-      onTap: () {
-        if (widget.title == "تاريخ الميلاد") {
-          _selectDate(context, user);
-        } else {
-          showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (context) {
-                UserChange user1 = Provider.of<UserChange>(context);
-                return Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: AlertDialog(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    title: Text("تعديل ${widget.title}"),
-                    content: Form(
-                      key: _formKey,
-                      child: widget.title == "الجنس"
-                          ? GenderRadioButton()
-                          : TextFormField(
-                              controller: _controller,
-                              validator: (value) {
-                                bool isNumber;
-                                //checking is number or not
-                                try {
-                                  int.parse(value!);
-                                  isNumber = true;
-                                } catch (ex) {
-                                  isNumber = false;
-                                }
-
-                                if (value!.isEmpty)
-                                  return "لا يمكن ان يكون ${widget.title} فارغ";
-                                else if (widget.title == "الرقم القومي" &&
-                                    value.length != 14)
-                                  return "الرقم القومي غير صحيح";
-                                else if (widget.title == "الرقم القومي" &&
-                                    isNumber == false)
-                                  return "الرقم القومي غير صحيح";
-                                else if ((widget.title == "رقم الهاتف" &&
-                                        isNumber == false) ||
-                                    (widget.title == "رقم الهاتف" &&
-                                        value.length != 11) ||
-                                    (widget.title == "رقم الهاتف" &&
-                                        !value.startsWith("01")))
-                                  return "رقم الهاتف غير صحيح";
-                              },
-                              decoration: InputDecoration(
-                                labelText: "${widget.title}",
-                              ),
-                            ),
-                    ),
-                    actions: <Widget>[
-                      user1.isLoading
-                          ? Container(
-                              width: 17,
-                              height: 17,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 0.7,
-                              ))
-                          : TextButton(
-                              onPressed: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  try {
-                                    final result = await InternetAddress.lookup(
-                                        'google.com');
-                                    if (result.isNotEmpty &&
-                                        result[0].rawAddress.isNotEmpty) {
-                                      await updateToFirestore(
-                                          user: user,
-                                          text: widget.title == "الجنس"
-                                              ? GenderRadioButtonState.gender
-                                              : _controller!.text);
-                                    }
-                                  } on SocketException catch (_) {
-                                    Fluttertoast.showToast(
-                                        msg: "تأكد من إتصالك بالإنترنت",
-                                        toastLength: Toast.LENGTH_LONG);
-                                  }
-                                }
-                              },
-                              child: Text("تعديل")),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text("إلغاء")),
-                    ],
-                  ),
-                );
-              });
-        }
-      },
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 21.0,
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(children: [
-                  Icon(
-                    widget.title == "الاسم"
-                        ? Icons.person
-                        : widget.title == "رقم الهاتف"
-                            ? Icons.phone
-                            : widget.title == "الرقم القومي"
-                                ? Icons.confirmation_num
-                                : widget.title == "الجنس"
-                                    ? Icons.group_add
-                                    : widget.title == "العنوان"
-                                        ? Icons.location_on
-                                        : Icons.date_range,
-                    size: MediaQuery.of(context).size.width * .08,
-                    color: Colors.blue,
-                  ),
-                  SizedBox(width: 24.0),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        "${widget.title}",
-                        style: TextStyle(
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      SizedBox(height: 4.0),
-                      Text(
-                        "${widget.data}",
-                        maxLines: 1,
-                        style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 12.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                ]),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 30.0,
-                  color: Colors.blue,
+      onTap: () =>onPress(context),
+      child: Card(
+        margin: EdgeInsets.symmetric(horizontal: 16.0),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16.0,
+            vertical: 21.0
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(children: [
+                Icon(cardIcon,
+                  size: MediaQuery.of(context).size.width * .08,
+                  color: Colors.blue
                 ),
-              ],
-            ),
+                SizedBox(width: 24.0),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      "$title",
+                      style: TextStyles.title,
+                    ),
+                    SizedBox(height: 4.0),
+                    Text(
+                      "data",
+                      maxLines: 1
+                    ),
+                  ],
+                ),
+              ]),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 30.0,
+                color: Colors.blue,
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Future<void> _selectDate(BuildContext context, UserChange user) async {
+  CustomTextField buildTextFieldWidget() {
+    return CustomTextField(
+      icon: cardIcon,
+      label: title,
+      onSave: (value) => data = value,
+      initialValue: data,
+    );
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
     String _selectedBirthDate = "";
-    List dateList = widget.data.split("/");
+    List dateList = data!.split("/");
     int year = int.parse(dateList[0]);
     int month = int.parse(dateList[1]);
     int day = int.parse(dateList[2]);
@@ -210,72 +113,92 @@ class _CardItemState extends State<CardItem> {
           picked.month.toString() +
           "/" +
           picked.day.toString();
-      try {
-        final result = await InternetAddress.lookup('google.com');
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          if (!await user.updateBirthdate(
-              birthdate: _selectedBirthDate, userId: widget.userId))
-            Fluttertoast.showToast(msg: "${CardItem.error}");
-          else {
-            Fluttertoast.showToast(msg: "تم تحديث ${widget.title} بنجاح ");
-          }
 
-          Fluttertoast.showToast(msg: "تم تحديث ${widget.title} بنجاح ");
-        }
-      } on SocketException catch (_) {
-        Fluttertoast.showToast(msg: "تأكد من الاتصال بالإنترنت");
-      }
+           await userChange!.updateUserField(field: UserModel.BIRTH_DATE,
+              value: _selectedBirthDate);
+
     }
   }
 
-  Future<void> updateToFirestore({String? text, UserChange? user}) async {
-    GenderRadioButtonState.gender = "ذكر";
-    if (widget.title == "الاسم") {
-      List names = text!.trim().split(" ");
+  Future<void> updateToFirestore() async {
+
+  GenderRadioButtonState.gender = "ذكر";
+    if (title == "الاسم") {
+      List names = data!.trim().split(" ");
       String fName = names.first;
       String lName = names.length > 1
-          ? text.substring(
+          ? data!.substring(
               fName.length + 1,
-              text.length,
+              data!.length,
             )
           : "";
 
-      if (!await user!
-          .updateUserName(fName: fName, lName: lName, userId: widget.userId))
-        Fluttertoast.showToast(msg: "${CardItem.error}");
-      else {
-        Fluttertoast.showToast(msg: "تم تحديث ${widget.title} بنجاح ");
-        Navigator.pop(context);
-      }
-    } else if (widget.title == "الرقم القومي") {
-      if (!await user!.updateSSN(SSN: text, userId: widget.userId))
-        Fluttertoast.showToast(msg: "${CardItem.error}");
-      else {
-        Fluttertoast.showToast(msg: "تم تحديث ${widget.title} بنجاح ");
-        Navigator.pop(context);
-      }
-    } else if (widget.title == "رقم الهاتف") {
-      if (!await user!
-          .updatePhoneNumber(phoneNumber: text, userId: widget.userId))
-        Fluttertoast.showToast(msg: "${CardItem.error}");
-      else {
-        Fluttertoast.showToast(msg: "تم تحديث ${widget.title} بنجاح ");
-        Navigator.pop(context);
-      }
-    } else if (widget.title == "الجنس") {
-      if (!await user!.updateGender(gender: text, userId: widget.userId))
-        Fluttertoast.showToast(msg: "${CardItem.error}");
-      else {
-        Fluttertoast.showToast(msg: "تم تحديث ${widget.title} بنجاح ");
-        Navigator.pop(context);
-      }
-    } else if (widget.title == "العنوان") {
-      if (!await user!.updateAddress(address: text, userId: widget.userId))
-        Fluttertoast.showToast(msg: "${CardItem.error}");
-      else {
-        Fluttertoast.showToast(msg: "تم تحديث ${widget.title} بنجاح ");
-        Navigator.pop(context);
-      }
+
+      await userChange!
+          .updateUserName(fName: fName, lName: lName);
+
+    } else if (title == "الرقم القومي") {
+
+      String field= title == "الرقم القومي"?UserModel.SSN:title == "رقم الهاتف"
+          ?
+      UserModel.PHONE_NUMBER
+          :
+      title == "الجنس"
+          ?
+      UserModel.GENDER
+          :
+      title == "العنوان"
+          ?
+          UserModel.ADDRESS
+          :
+          ""
+      ;
+
+
+      await userChange!.updateUserField(field:field,
+          value: data);
+
+    }
+  }
+
+  onPress(BuildContext context) {
+    if (title == "تاريخ الميلاد") {
+      _selectDate(context);
+    } else {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) {
+            final _formKey = GlobalKey<FormState>();
+
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              title: Text("تعديل $title"),
+              content: Form(
+                  key: _formKey,
+                  child:
+                  title == "الجنس"
+                      ?
+                  GenderRadioButton()
+                      :
+                  buildTextFieldWidget()
+              ),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () async {
+                      _formKey.currentState!.save();
+                      if (_formKey.currentState!.validate()) {
+
+                        Navigator.pop(context);
+                        await updateToFirestore();
+                      }
+                    },
+                    child: Text("تعديل")),
+                CancelButton(),
+              ],
+            );
+          });
     }
   }
 }

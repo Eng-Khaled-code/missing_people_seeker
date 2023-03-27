@@ -1,12 +1,11 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:image_picker/image_picker.dart';
 
 class StorageServices {
   FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
   Future<void> uploadingImageToStorage(
-      {XFile? image,
+      {File? image,
       String? docId,
       String? type,
       String? collection,

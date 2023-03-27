@@ -3,10 +3,13 @@ import 'package:finalmps/models/found_model.dart';
 import 'package:finalmps/models/missed_model.dart';
 import 'package:finalmps/provider/missed_change.dart';
 import 'package:provider/provider.dart';
-import 'package:finalmps/PL/utilites/found_card.dart';
-import 'package:finalmps/PL/utilites/order_card.dart';
+import 'package:finalmps/PL/home/found_people/found_card.dart';
+import 'package:finalmps/PL/home/orders/orders_page/order_card/order_card.dart';
+import '../../utilites/widgets/background_image.dart';
 
+// ignore: must_be_immutable
 class NotifyDetails extends StatelessWidget {
+
   final String? type;
   final String? orderId;
   NotifyDetails({@required this.type, @required this.orderId});
@@ -24,86 +27,51 @@ class NotifyDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     MissedChange missedChange = Provider.of<MissedChange>(context);
 
     loadOrderData(missedChange);
 
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        appBar: AppBar(
-          title: (type == "found" && foundModel == null) ||
-                  (type == "accept" && missedModel == null)
-              ? Container(
-                  width: 20,
-                  height: 20,
-                  child: Center(
-                      child: CircularProgressIndicator(
-                    strokeWidth: .7,
-                  )))
-              : Text(
-                  type == "found"
-                      ? foundModel.name
-                      : missedModel.name == ""
-                          ? "الاسم غير موجود"
-                          : missedModel.name,
-                  style:
-                      TextStyle(color: Colors.black54, fontSize: width * .039),
-                ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Icon(
-                Icons.done,
-                color: Colors.green,
-              ),
-            )
+    return (type == "found" && foundModel == null) ||
+        (type == "accept" && missedModel == null)
+        ?
+    Material(child:Center(child: CircularProgressIndicator()))
+        :
+    Scaffold(
+      appBar:appBar(width),
+      body: Container(
+        child: Stack(
+          children: <Widget>[
+            BackgroundImage(),
+            type == "found"
+                ? FoundCard(foundModel: foundModel,myFound: true)
+                : OrderCard(missedModel: missedModel,type: missedModel.type,
+            ),
           ],
         ),
-        body: Container(
-          child: Stack(
-            children: <Widget>[
-              Container(
-                height: height,
-                width: width,
-                child: Opacity(
-                    opacity: 0.5,
-                    child: Image.asset(
-                      'assets/images/splach_bg.png',
-                      fit: BoxFit.fill,
-                    )),
-              ),
-              (type == "found" && foundModel == null) ||
-                      (type == "accept" && missedModel == null)
-                  ? Center(child: CircularProgressIndicator())
-                  : type == "found"
-                      ? FoundCard(
-                          age: foundModel.age,
-                          foundDate: foundModel.id,
-                          fullName: foundModel.name,
-                          gender: foundModel.gender,
-                          lastPlace: foundModel.place,
-                          missingImagePath: foundModel.imageUrl2,
-                          personId: foundModel.secondUserId)
-                      : OrderCard(
-                          age: missedModel.age,
-                          eyeColor: missedModel.eyeColor,
-                          faceColor: missedModel.faceColor,
-                          fullName: missedModel.name,
-                          gender: missedModel.gender,
-                          hairColor: missedModel.hairColor,
-                          helthyStatus: missedModel.helthyStatus,
-                          imagePath: missedModel.imageUrl,
-                          type: missedModel.type,
-                          status: missedModel.status,
-                          lastPlace: missedModel.lastPlace,
-                          publishDate: missedModel.publishDate,
-                          id: missedModel.id),
-            ],
-          ),
-        ),
       ),
+    );
+  }
+
+  AppBar appBar(double width) {
+    return  AppBar(
+      title:Text(
+        type == "found"
+            ? foundModel.name
+            : missedModel.name == ""
+            ? "الاسم غير موجود"
+            : missedModel.name,
+        style:
+        TextStyle(color: Colors.black54, fontSize: width * .039),
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Icon(
+            Icons.done,
+            color: Colors.green,
+          ),
+        )
+      ],
     );
   }
 }

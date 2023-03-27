@@ -11,47 +11,29 @@ class FoundModel {
   static const SECOND_USER_ID = "second_user_id";
   static const IMAGE_URL_2 = "image_url_2";
 
-  String _id = "";
-  String _name = "";
-  String _gender = "";
-  String _imageUrl1 = " ";
-  String _imageUrl2 = " ";
-  String _place = "";
-  String _mainUserId = "";
-  String _secondUserId = "";
-  String _age = "";
-
+  String id = "";
+  String name = "";
+  String gender = "";
+  String imageUrl1 = " ";
+  String imageUrl2 = " ";
+  String place = "";
+  String mainUserId = "";
+  String secondUserId = "";
+  String age = "";
   FoundModel();
 
   FoundModel.fromSnapshoot(DocumentSnapshot snapshot) {
     Map<String, dynamic> userData = snapshot.data() as Map<String, dynamic>;
 
-    _id = userData[ID];
-    _secondUserId = userData[SECOND_USER_ID];
-    _mainUserId = userData[MAIN_USER_ID];
-    _place = userData[PLACE];
-    _imageUrl2 = snapshot.get(IMAGE_URL_2) ?? "";
-    _imageUrl1 = snapshot.get(IMAGE_URL_1) ?? "";
-    _gender = userData[GENDER];
-    _age = userData[AGE];
-    _name = userData[NAME];
+    id = userData[ID];
+    secondUserId = userData[SECOND_USER_ID];
+    mainUserId = userData[MAIN_USER_ID];
+    place = userData[PLACE];
+    imageUrl2 = snapshot.get(IMAGE_URL_2) ?? "";
+    imageUrl1 = snapshot.get(IMAGE_URL_1) ?? "";
+    gender = userData[GENDER];
+    age = userData[AGE];
+    name = userData[NAME];
   }
 
-  String get id => _id;
-
-  String get name => _name;
-
-  String get age => _age;
-
-  String get gender => _gender;
-
-  String get place => _place;
-
-  String get imageURL1 => _imageUrl1;
-
-  String get imageUrl2 => _imageUrl2;
-
-  String get mainUserId => _mainUserId;
-
-  String get secondUserId => _secondUserId;
 }

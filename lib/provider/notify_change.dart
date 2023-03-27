@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finalmps/models/missed_model.dart';
 import 'package:finalmps/models/notify_model.dart';
 import 'package:finalmps/services/notify_services.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:finalmps/PL/home/orders/order_suggestions.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class NotifyChange with ChangeNotifier {
   bool isLoading = false;
@@ -11,34 +12,32 @@ class NotifyChange with ChangeNotifier {
 
   NotifyServices _notifyServices = NotifyServices();
 
-  MissedModel _orderData = MissedModel();
-  String _notifyCount = "";
-  String _lastDate = "";
-  List<NotifyModel> _notificationsList = [];
+  MissedModel orderData = MissedModel();
+  String notifyCount = "";
+  String lastDate = "";
+  List<NotifyModel>? notificationsList;
 
   Future<void> loadNotifications({String? userId}) async {
-    _notificationsList = await _notifyServices.loadNotificationsList(userId);
-    notifyListeners();
+    try{
+
+        notificationsList = await _notifyServices.loadNotificationsList(userId);
+        notifyListeners();
+    }
+    on FirebaseException catch(e){
+      Fluttertoast.showToast(msg: e.message!,toastLength: Toast.LENGTH_LONG);
+    }
   }
 
-  Future<bool> updateSeen({String? userId, String? notifyId}) async {
+  Future<void> updateSeen({String? userId, String? notifyId}) async {
     try {
-      isLoading = true;
-      notifyListeners();
-
       // refuse order value 2
       await _notifyServices
-          .updateSeen(userId: userId, notifyId: notifyId)
-          .then((value) {
-        isLoading = false;
-        notifyListeners();
-      });
-
-      return true;
-    } catch (ex) {
-      isLoading = false;
+          .updateSeen(userId: userId, notifyId: notifyId);
       notifyListeners();
-      return false;
+
+    } on FirebaseException catch(e) {
+      Fluttertoast.showToast(msg: e.message!,toastLength: Toast.LENGTH_LONG);
+
     }
   }
 
@@ -54,13 +53,13 @@ class NotifyChange with ChangeNotifier {
   }
 
   Future<void> loadNotifyCount({String? userId, String? date}) async {
-    _notifyCount =
-        await _notifyServices.notifyCount(userId: userId, date: date);
+    notifyCount =
+        await _notifyServices.notifyCount(userId: userId);
     notifyListeners();
   }
 
   Future<void> loadLastDate({String? userId}) async {
-    _lastDate = await _notifyServices.loadLastDate(userId: userId);
+    lastDate = await _notifyServices.loadLastDate(userId: userId);
     notifyListeners();
   }
 
@@ -69,7 +68,7 @@ class NotifyChange with ChangeNotifier {
       isLoading = true;
       notifyListeners();
 
-      _orderData = await _notifyServices.loadOrderData(orderId: orderId);
+      orderData = await _notifyServices.loadOrderData(orderId: orderId);
       isLoading = false;
 
       notifyListeners();
@@ -81,50 +80,28 @@ class NotifyChange with ChangeNotifier {
 
   Future<bool> deleteNotifyByOrder({String? userId, String? orderId}) async {
     try {
-      isLoading = true;
-      notifyListeners();
 
       await _notifyServices
-          .deleteNotifys(userId: userId, orderId: orderId)
-          .then((value) {
-        isLoading = false;
-        notifyListeners();
-      });
+          .deleteNotifys(userId: userId, orderId: orderId);
 
+      Fluttertoast.showToast(msg: "تم حذف الاشعار بالفعل", toastLength: Toast.LENGTH_LONG);
       return true;
-    } catch (ex) {
-      isLoading = false;
-      notifyListeners();
+    } on FirebaseException catch(e) {
+      Fluttertoast.showToast(msg: e.message!,toastLength: Toast.LENGTH_LONG);
       return false;
     }
   }
 
-  Future<bool> deleteNotifyByNotifyId(
-      {String? userId, String? notifyId}) async {
+  Future<void> deleteNotifyByNotifyId({String? userId, String? notifyId}) async {
     try {
-      isLoading = true;
-      notifyListeners();
-
       await _notifyServices
-          .deleteNotifyById(userId: userId, notifyId: notifyId)
-          .then((value) {
-        isLoading = false;
-        notifyListeners();
-      });
+          .deleteNotifyById(userId: userId, notifyId: notifyId);
 
-      return true;
-    } catch (ex) {
-      isLoading = false;
-      notifyListeners();
-      return false;
-    }
+        Fluttertoast.showToast(msg: "تم حذف الاشعار بالفعل", toastLength: Toast.LENGTH_LONG);
+      } on FirebaseException catch(e) {
+        Fluttertoast.showToast(msg: e.message!,toastLength: Toast.LENGTH_LONG);
+
+      }
   }
 
-  MissedModel get getOrderData => _orderData;
-
-  String get getNotificationsCount => _notifyCount;
-
-  String get getLastDate => _lastDate;
-
-  List<NotifyModel> get getNotificationsList => _notificationsList;
 }

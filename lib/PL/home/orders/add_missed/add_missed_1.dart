@@ -1,89 +1,59 @@
 import 'package:finalmps/PL/home/orders/add_missed/add_missed_2.dart';
-import 'package:finalmps/PL/utilites/custom_button.dart';
-import 'package:finalmps/PL/utilites/custom_textfield.dart';
-import 'package:finalmps/PL/utilites/error_dialog.dart';
-import 'package:finalmps/PL/utilites/gender_widget.dart';
-import 'package:finalmps/PL/utilites/person_round_corner_image.dart';
+import 'package:finalmps/PL/utilites/helper/helper.dart';
+import 'package:finalmps/PL/utilites/widgets/custom_button.dart';
+import 'package:finalmps/PL/utilites/widgets/error_dialog.dart';
+import 'package:finalmps/PL/utilites/widgets/gender/gender_widget.dart';
+import 'package:finalmps/PL/home/orders/add_missed/person_round_corner_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class AddMissed1 extends StatefulWidget {
-  final String? orderId;
-  final String? type;
+import '../../../utilites/text_style/text_styles.dart';
+import '../../../utilites/widgets/background_image.dart';
+import '../../../utilites/widgets/custom_text_field.dart';
+
+class AddMissed1 extends StatelessWidget {
+
   final String? addOrUpdate;
-  final String? imagePath;
-  final String? helthyStatus;
-  final String? fullName;
-  final String? age;
-  final String? gender;
-  final String? lastPlace;
-  final String? faceColor;
-  final String? hairColor;
-  final String? eyeColor;
+
+   String? imagePath;
+   String? orderId;
+   String? type;
+   String? helthyStatus;
+   String? fullName;
+   String? age;
+   String? gender;
+   String? lastPlace;
+   String? faceColor;
+   String? hairColor;
+   String? eyeColor;
 
   AddMissed1(
       {@required this.addOrUpdate,
-      @required this.type,
-      @required this.orderId,
-      @required this.imagePath,
-      @required this.helthyStatus,
-      @required this.fullName,
-      @required this.age,
-      @required this.gender,
-      @required this.lastPlace,
-      @required this.faceColor,
-      @required this.hairColor,
-      @required this.eyeColor});
+       this.type,
+       this.orderId,
+       this.imagePath,
+       this.helthyStatus,
+       this.fullName,
+       this.age,
+       this.gender,
+       this.lastPlace,
+       this.faceColor,
+       this.hairColor,
+       this.eyeColor});
 
-  @override
-  _AddMissed1State createState() => _AddMissed1State();
-}
-
-class _AddMissed1State extends State<AddMissed1> {
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController? _txtFullname;
-  TextEditingController? _txtage;
-
-  @override
-  void initState() {
-    super.initState();
-    _txtFullname = TextEditingController(
-        text: widget.addOrUpdate == "تعديل" ? widget.fullName : "");
-    _txtage = TextEditingController(
-        text: widget.addOrUpdate == "تعديل" ? widget.age : "");
-
-    setState(() {
-      GenderRadioButtonState.gender =
-          widget.addOrUpdate == "تعديل" ? widget.gender! : "ذكر";
-      MissingImageState.imagePath =
-          widget.addOrUpdate == "تعديل" ? widget.imagePath! : "";
-    });
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    MissingImageState.imageFile = null;
-    MissingImageState.imagePath = null;
-
-    GenderRadioButtonState.gender = "ذكر";
-    _txtFullname!.dispose();
-    _txtage!.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-
+    GenderRadioButtonState.gender = addOrUpdate == "تعديل" ? gender! : "ذكر";
+    MissingImageState.imagePath =addOrUpdate == "تعديل" ? imagePath! : "";
     return Directionality(
         textDirection: TextDirection.rtl,
         child: WillPopScope(
           onWillPop: () {
-            if (widget.addOrUpdate == "تعديل") {
+            if (addOrUpdate == "تعديل") {
               Navigator.pop(context);
               Navigator.pop(context);
             } else
@@ -93,37 +63,17 @@ class _AddMissed1State extends State<AddMissed1> {
           },
           child: Scaffold(
               appBar: AppBar(
-                flexibleSpace: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF1E88E5),
-                        Color(0xFF0D47A1),
-                      ],
-                      begin: Alignment.bottomRight,
-                      end: Alignment.topLeft,
-                    ),
-                  ),
-                ),
+
                 title: Text(
-                  "${widget.addOrUpdate}" + " طلب " + "${widget.type}",
-                  style: TextStyle(color: Colors.white, fontSize: 16.0),
+                  "$addOrUpdate" + " طلب " + "$type",
+                  style: TextStyles.title,
                 ),
               ),
               body: Container(
                 child: Stack(
                   alignment: Alignment.center,
                   children: <Widget>[
-                    Container(
-                      height: height,
-                      width: width,
-                      child: Opacity(
-                          opacity: 0.5,
-                          child: Image.asset(
-                            'assets/images/splach_bg.png',
-                            fit: BoxFit.fill,
-                          )),
-                    ),
+                    BackgroundImage(),
                     Form(
                       key: _formKey,
                       child: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -142,33 +92,30 @@ class _AddMissed1State extends State<AddMissed1> {
                                   MissingImage(),
                                   SizedBox(height: 20.0),
                                   CustomTextField(
-                                      lable: widget.type != "فقد"
+                                      label: type != "فقد"
                                           ? "الاسم بالكامل (إن أمكن)"
                                           : "الاسم بالكامل",
                                       icon: Icons.person_outline,
-                                      controller: _txtFullname!,
-                                      color: Colors.white),
+                                      onSave:(value)=> fullName=value,
+                                      initialValue: fullName,
+                                  ),
                                   SizedBox(height: 20.0),
                                   CustomTextField(
-                                      lable: widget.type != "فقد"
+                                      label: type != "فقد"
                                           ? "السن (إن أمكن)"
                                           : "السن",
                                       icon: Icons.person_outline,
-                                      controller: _txtage!,
-                                      color: Colors.white),
+                                      initialValue: age,
+                                    onSave: (value)=>age=value,
+                                  ),
                                   SizedBox(height: 20.0),
                                   GenderRadioButton(),
                                   Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 10, vertical: 20),
                                       child: CustomButton(
-                                          color: [
-                                            Color(0xFF1E88E5),
-                                            Color(0xFF0D47A1)
-                                          ],
                                           text: "التالي",
-                                          onPress: () => navigateToNext(),
-                                          textColor: Colors.white)),
+                                          onPress: () => navigateToNext(context),)),
                                   SizedBox(height: 70.0)
                                 ],
                               ),
@@ -183,7 +130,7 @@ class _AddMissed1State extends State<AddMissed1> {
         ));
   }
 
-  navigateToNext() {
+  navigateToNext(BuildContext context) {
     //MissingImageState.imageFile ==null the user has not update the image
     if (MissingImageState.imageFile == null &&
         (MissingImageState.imagePath == null ||
@@ -214,31 +161,30 @@ class _AddMissed1State extends State<AddMissed1> {
 //              );
 //            });
 //      } else {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => widget.addOrUpdate == "تعديل"
+      if( addOrUpdate == "تعديل"){
+        AddMissed2.eyeColor= eyeColor;
+        AddMissed2.faceColor=faceColor;
+        AddMissed2.hairColor= hairColor;
+    }
+      Helper().goTo(context: context,to: addOrUpdate == "تعديل"
                   ? AddMissed2(
-                      orderId: widget.orderId,
-                      addOrUpdate: widget.addOrUpdate,
+                      orderId:orderId,
+                      addOrUpdate: addOrUpdate,
                       imageFile: MissingImageState.imageFile,
-                      fullName: _txtFullname!.text,
-                      age: _txtage!.text,
+                      fullName:fullName,
+                      age: age,
                       gender: GenderRadioButtonState.gender,
-                      type: widget.type,
-                      oldEyeColor: widget.eyeColor,
-                      oldFaceColor: widget.faceColor,
-                      oldHairColor: widget.hairColor,
-                      oldHelthyStatus: widget.helthyStatus,
-                      lastPlace: widget.lastPlace,
+                      type: type,
+                      helthyStatus: helthyStatus,
+                      lastPlace: lastPlace,
                     )
                   : AddMissed2(
-                      addOrUpdate: widget.addOrUpdate,
+                      addOrUpdate: addOrUpdate,
                       imageFile: MissingImageState.imageFile,
-                      fullName: _txtFullname!.text,
-                      age: _txtage!.text,
+                      fullName: fullName,
+                      age:age,
                       gender: GenderRadioButtonState.gender,
-                      type: widget.type)));
+                      type: type));
       //  }
     }
   }
