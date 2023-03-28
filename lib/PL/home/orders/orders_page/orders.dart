@@ -37,7 +37,6 @@ class _OrdersState extends State<Orders> {
                     onPressed: () => setState(() => widget.selectedPage = "0"),
                     child: Text("طلبات الفقد",
                         style: TextStyle(
-                            fontSize: 22,
                             color: widget.selectedPage == "0"
                                 ? activeColor
                                 : notActiveColor))),
@@ -48,7 +47,6 @@ class _OrdersState extends State<Orders> {
                           setState(() => widget.selectedPage = "1"),
                       child: Text("طلبات إيجاد",
                           style: TextStyle(
-                              fontSize: 22,
                               color: widget.selectedPage == "1"
                                   ? activeColor
                                   : notActiveColor))))

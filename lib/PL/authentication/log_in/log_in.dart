@@ -36,7 +36,7 @@ class LogIn extends StatelessWidget {
         CustomButton(
             text: Strings.logIn,
             onPress: () async => await onPressLogInButton()),
-        SizedBox(height: 10),
+        SizedBox(height: 30),
         lineSeparator(),
         SizedBox(height: 10),
         CustomButton(
@@ -62,7 +62,7 @@ class LogIn extends StatelessWidget {
   AppIcon icon() {
     Size iconSize = screenSizeDesign == Strings.largeDesign
         ? Size(250, 250)
-        : Size(100, 100);
+        : Size(175, 175);
     return AppIcon(size: iconSize);
   }
 
@@ -78,7 +78,7 @@ class LogIn extends StatelessWidget {
 
   CustomTextField buildPasswordFieldWidget() {
     return CustomTextField(
-      label: "كلمةالمرور",
+      label: "كلمة المرور",
       icon: Icons.lock,
       onSave: (value) => txtPassword = value,
       initialValue: txtPassword,
@@ -91,7 +91,7 @@ class LogIn extends StatelessWidget {
         onTap: () => userChange!.setAuthPage(AuthPage.EMAIL_SIGN_UP),
         child: Text(
           Strings.dontHaveAccount,
-          style: TextStyles.title.copyWith(color: Colors.white),
+          style: TextStyles.title.copyWith(color: Colors.white,fontSize: 18),
         ));
   }
 
@@ -100,7 +100,7 @@ class LogIn extends StatelessWidget {
       alignment: Alignment.center,
       child: Text(
         "او سجل الدخول بواسطة ...",
-        style: TextStyles.title.copyWith(color: Colors.white),
+        style: TextStyles.title.copyWith(color: Colors.white,fontSize: 16),
       ),
     );
   }

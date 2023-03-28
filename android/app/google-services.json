@@ -7,116 +7,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:941095566314:android:9c9e4f2e091644e4d2d093",
+        "mobilesdk_app_id": "1:941095566314:android:fda52d9fdd240332d2d093",
         "android_client_info": {
           "package_name": "com.engoo.finalmps"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "941095566314-s6rnpuiues6motd1fbcphg2s4rh1m8oo.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.engoo.finalmps",
-            "certificate_hash": "8d261b96b534ea7b5c48ae4c5771bfd9b68407b2"
-          }
-        },
-        {
-          "client_id": "941095566314-5kith3072ujscc1ik60frgpkbla87u7d.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAvrSyuv1BUQkh5bXeCpC07siuAmGuP2mI"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "941095566314-5kith3072ujscc1ik60frgpkbla87u7d.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "941095566314-1ltbpksifk0mmd9vj6u5h7o00881q8ip.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.missingpeopleseeker"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:941095566314:android:3a5e2a0b2e6ad101d2d093",
-        "android_client_info": {
-          "package_name": "com.example.missingpeopleseeker"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "941095566314-8kle675m5l66nota7tvi2oabd347901r.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.missingpeopleseeker",
-            "certificate_hash": "8d261b96b534ea7b5c48ae4c5771bfd9b68407b2"
-          }
-        },
-        {
-          "client_id": "941095566314-c920g7qqcthuhkdpbbphmtj5n977tk6b.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.missingpeopleseeker",
-            "certificate_hash": "89885eb662744a3f5c773616ed1f5ed479ed5e0b"
-          }
-        },
-        {
-          "client_id": "941095566314-5kith3072ujscc1ik60frgpkbla87u7d.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAvrSyuv1BUQkh5bXeCpC07siuAmGuP2mI"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "941095566314-5kith3072ujscc1ik60frgpkbla87u7d.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "941095566314-1ltbpksifk0mmd9vj6u5h7o00881q8ip.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.missingpeopleseeker"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:941095566314:android:31c22c34b0d0f145d2d093",
-        "android_client_info": {
-          "package_name": "com.example.missingpeopleseekeradmin"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "941095566314-8ittmf5vpgk0lhd81kaejd40f4kmd88a.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.missingpeopleseekeradmin",
-            "certificate_hash": "8d261b96b534ea7b5c48ae4c5771bfd9b68407b2"
-          }
-        },
         {
           "client_id": "941095566314-5kith3072ujscc1ik60frgpkbla87u7d.apps.googleusercontent.com",
           "client_type": 3

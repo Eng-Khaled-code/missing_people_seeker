@@ -51,7 +51,7 @@ class CardItem extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       "$title",
-                      style: TextStyles.title,
+                      style: TextStyles.title.copyWith(fontSize: 18),
                     ),
                     SizedBox(height: 4.0),
                     Text(data!, maxLines: 1),

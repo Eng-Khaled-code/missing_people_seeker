@@ -10,8 +10,8 @@ import 'PL/authentication/authentication_page.dart';
 import 'PL/utilites/strings.dart';
 import 'PL/utilites/themes/app_thems/dark_them_data.dart';
 import 'PL/utilites/themes/app_thems/light_them_data.dart';
+import 'firebase_options.dart';
 import 'provider/theme_change.dart';
-import 'start_point/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

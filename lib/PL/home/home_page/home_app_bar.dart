@@ -22,7 +22,9 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: title == "الرئيسية" ? Color(0xFF1E88E5) : Colors.black45,
+      backgroundColor: title == "الرئيسية" ? Color(0xFF1E88E5)
+          :
+      Theme.of(context).colorScheme.background,
       elevation: 0,
       title: Text(
         title!,

@@ -50,6 +50,8 @@ class GoogleServices
     UserModel.EMAIL: userCredential.user!.email,
     UserModel.IMAGE_URL: userCredential.user!.photoURL,
     UserModel.TYPE: "user",
+    UserModel.CONNECTED:"yes"
+
   };
   await UserServices().addToFirestore(
       collection: UserModel.USER_REF,

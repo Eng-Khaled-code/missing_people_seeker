@@ -64,6 +64,7 @@ class _FoundsState extends State<Founds> {
 
   appBar() {
     return AppBar(
+      automaticallyImplyLeading: false,
       title: Row(
         children: <Widget>[
           Expanded(
@@ -72,7 +73,6 @@ class _FoundsState extends State<Founds> {
                 child: Text("اشخاص تم ايجادهم لي",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontSize: 22,
                         color: selectedPage == Page.MyFounds
                             ? activeColor
                             : notActiveColor))),
@@ -84,7 +84,6 @@ class _FoundsState extends State<Founds> {
                   child: Text("اشخاص ساعدت في ايجادهم",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontSize: 22,
                           color: selectedPage == Page.OtherFounds
                               ? activeColor
                               : notActiveColor))))

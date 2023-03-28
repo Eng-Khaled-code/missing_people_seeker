@@ -14,7 +14,7 @@ class ForgetPasswordWidget extends StatelessWidget {
       child:TextButton(
         child: Text(
           Strings.forgetPassword,
-          style: TextStyles.title.copyWith(color: Colors.white),
+          style: TextStyles.title.copyWith(color: Colors.white,fontSize: 16),
         ),
         onPressed: ()=>userChange!.setAuthPage(AuthPage.FORGET_PASSWORD),
       ),

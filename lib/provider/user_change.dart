@@ -87,6 +87,7 @@ class UserChange with ChangeNotifier {
           collection: UserModel.USER_REF,
           docId: userId ?? userData!.id,
           data: {UserModel.CONNECTED: connected});
+      notifyListeners();
     } on FirebaseException catch (e) {
       Fluttertoast.showToast(msg: e.message!);
     }

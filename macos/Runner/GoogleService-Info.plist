@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>941095566314-4t74meukn20t84mmq6cn1rbk96fd9n30.apps.googleusercontent.com</string>
+	<string>941095566314-8v76jproepevt9mvb4480tqh27mu7omc.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.941095566314-4t74meukn20t84mmq6cn1rbk96fd9n30</string>
+	<string>com.googleusercontent.apps.941095566314-8v76jproepevt9mvb4480tqh27mu7omc</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>941095566314-8ittmf5vpgk0lhd81kaejd40f4kmd88a.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.engoo.finalmps</string>
+	<string>com.engoo.finalMps</string>
 	<key>PROJECT_ID</key>
 	<string>mpss-d477f</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:941095566314:ios:bf36b6dddbda55b4d2d093</string>
+	<string>1:941095566314:ios:972fe380d6464ac6d2d093</string>
 </dict>
 </plist>

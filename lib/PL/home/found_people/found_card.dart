@@ -4,37 +4,31 @@ import 'package:finalmps/provider/missed_change.dart';
 import 'package:provider/provider.dart';
 import '../../../models/found_model.dart';
 
-class FoundCard extends StatefulWidget {
+// ignore: must_be_immutable
+class FoundCard extends StatelessWidget {
 
   final  FoundModel? foundModel;
   final bool? myFound;
   FoundCard(
       {@required this.foundModel,this.myFound});
 
-  @override
-  _FoundCardState createState() => _FoundCardState();
-}
-
-class _FoundCardState extends State<FoundCard> {
 
   UserModel? userData;
 
   loadUserData(MissedChange missedChange) async {
 
-   String personId= widget.myFound! ? widget.foundModel!.secondUserId : widget.foundModel!.mainUserId;
+   String personId= myFound! ? foundModel!.secondUserId : foundModel!.mainUserId;
     UserModel userData1 = await missedChange.getUserData(personId);
-    setState(() {
       userData = userData1;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     MissedChange missedChange = Provider.of<MissedChange>(context);
     loadUserData(missedChange);
-    String missImage=widget.myFound!
-        ?widget.foundModel!.imageUrl1
-        : widget.foundModel!.imageUrl2;
+    String missImage=myFound!
+        ?foundModel!.imageUrl1
+        : foundModel!.imageUrl2;
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Container(
@@ -104,18 +98,18 @@ class _FoundCardState extends State<FoundCard> {
                     ]),
                     TableRow(children: [
                       Text("اسم المفقود :"),
-                      Text(widget.foundModel!.name)
+                      Text(foundModel!.name)
                     ]),
-                    TableRow(children: [Text("الجنس :"), Text(widget.foundModel!.gender)]),
-                    TableRow(children: [Text("السن :"), Text(widget.foundModel!.age)]),
+                    TableRow(children: [Text("الجنس :"), Text(foundModel!.gender)]),
+                    TableRow(children: [Text("السن :"), Text(foundModel!.age)]),
                     TableRow(children: [
                       Text("المكان الحالي :"),
-                      Text(widget.foundModel!.place)
+                      Text(foundModel!.place)
                     ]),
                     TableRow(children: [
                       Text("تاريخ العثور علي الشخص :"),
                       Text(DateTime.fromMicrosecondsSinceEpoch(
-                              int.tryParse(widget.foundModel!.id)!)
+                              int.tryParse(foundModel!.id)!)
                           .toString())
                     ]),
                   ],

@@ -42,7 +42,7 @@ class CustomStreamBuilder extends StatelessWidget {
                           mainAxisSpacing: 20,
                           childAspectRatio:
                               screenSizeDesign == Strings.smallDesign
-                                  ? 0.8
+                                  ? 0.5
                                   : 0.7,
                           maxCrossAxisExtent:
                               screenSizeDesign == Strings.smallDesign

@@ -35,8 +35,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             initialValue:widget.initialValue,
             maxLines:widget.label==""||widget.label=="العنوان"?3:1,
             keyboardType: widget.textInputType,
-            obscureText: widget.label=="كلمةالمرور"||
-                widget.label=="كلمةالمرور"||widget.label=="كلمةالمرور القديمة"?hidePass:false,
+            obscureText: widget.label=="كلمةالمرور"?hidePass:false,
             validator:(value){
 
               bool isNumber;
@@ -92,7 +91,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 widget.icon,
               ),
               suffixIcon:
-              widget.label=="password"||widget.label=="new password"||widget.label=="old password"
+              widget.label=="كلمة المرور"
                   ?
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),

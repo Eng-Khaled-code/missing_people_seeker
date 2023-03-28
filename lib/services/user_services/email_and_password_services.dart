@@ -41,7 +41,8 @@ class EmailAndPasswordServices {
       UserModel.SSN: ssn,
       UserModel.EMAIL: email,
       UserModel.TYPE: "user",
-      UserModel.IMAGE_URL: ""
+      UserModel.IMAGE_URL: "",
+      UserModel.CONNECTED:"yes"
     };
 
     await UserServices()
