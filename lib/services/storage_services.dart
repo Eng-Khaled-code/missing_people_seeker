@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class StorageServices {
   FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
@@ -12,26 +14,36 @@ class StorageServices {
       String? storageDirectoryPath,
       String? fieldName}) async {
     String? imgFileName = docId;
+    try {
+      Uint8List fileBytes = await image!.readAsBytes();
+      if (type == "update") {
+        await deleteImageFromStorage(
+            storageDirectoryPath: storageDirectoryPath, imgFileName: docId);
+      }
 
-    if (type == "update") {
-      await deleteImageFromStorage(
-          storageDirectoryPath: storageDirectoryPath, imgFileName: docId);
+      Reference storageReference = _firebaseStorage
+          .ref()
+          .child(storageDirectoryPath!)
+          .child(imgFileName!);
+
+      UploadTask storageUploadTask;
+      if (kIsWeb)
+        storageUploadTask = storageReference.putData(fileBytes);
+      else
+        storageUploadTask = storageReference.putFile(image);
+
+      await storageUploadTask.whenComplete(() {});
+
+      await storageReference.getDownloadURL().then((profileURL) async {
+        await FirebaseFirestore.instance
+            .collection(collection!)
+            .doc(docId)
+            .update({"image_url": profileURL});
+      });
+    } on FirebaseException catch (e) {
+      print("image error " + e.message!);
+      Fluttertoast.showToast(msg: "image error " + e.message!);
     }
-
-    Reference storageReference = await _firebaseStorage
-        .ref()
-        .child(storageDirectoryPath!)
-        .child(imgFileName!);
-
-    UploadTask storageUploadTask = storageReference.putFile(File(image!.path));
-    await storageUploadTask.whenComplete(() {});
-
-    await storageReference.getDownloadURL().then((profileURL) async {
-      await FirebaseFirestore.instance
-          .collection(collection!)
-          .doc(docId)
-          .update({"image_url": profileURL});
-    });
   }
 
   Future<void> deleteImageFromStorage(

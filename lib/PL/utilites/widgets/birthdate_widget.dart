@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomBirthdate extends StatefulWidget {
@@ -12,18 +11,24 @@ class CustomBirthdateState extends State<CustomBirthdate> {
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.only(bottom: 15.0),
-        child: GestureDetector(
+        child: InkWell(
           onTap: () => _selectDate(context),
           child: Container(
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 2,
-                )
-              ], color: Colors.white, borderRadius: BorderRadius.circular(5)),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.background ==
+                          Color(0xff90caf9)
+                      ? Colors.white
+                      : Colors.black45,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 2,
+                    )
+                  ],
+                  borderRadius: BorderRadius.circular(5)),
               padding: const EdgeInsets.only(right: 10.0),
               width: MediaQuery.of(context).size.width,
-              height: 67.0,
+              height: 70.0,
               child: Row(
                 children: [
                   Icon(Icons.date_range, color: Colors.black54),
@@ -32,9 +37,6 @@ class CustomBirthdateState extends State<CustomBirthdate> {
                     selectedBirthDate == ""
                         ? 'تاريخ الميلاد'
                         : selectedBirthDate,
-                    style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width * 0.035,
-                        color: Colors.black54),
                   ),
                 ],
               )),

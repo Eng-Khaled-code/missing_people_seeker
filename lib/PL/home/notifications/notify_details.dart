@@ -9,12 +9,11 @@ import '../../utilites/widgets/background_image.dart';
 
 // ignore: must_be_immutable
 class NotifyDetails extends StatelessWidget {
-
   final String? type;
   final String? orderId;
   NotifyDetails({@required this.type, @required this.orderId});
-  FoundModel foundModel=FoundModel();
-  MissedModel missedModel=MissedModel();
+  FoundModel foundModel = FoundModel();
+  MissedModel missedModel = MissedModel();
 
   loadOrderData(MissedChange missedChange) async {
     if (type == "found") {
@@ -32,36 +31,37 @@ class NotifyDetails extends StatelessWidget {
     loadOrderData(missedChange);
 
     return (type == "found" && foundModel == null) ||
-        (type == "accept" && missedModel == null)
-        ?
-    Material(child:Center(child: CircularProgressIndicator()))
-        :
-    Scaffold(
-      appBar:appBar(width),
-      body: Container(
-        child: Stack(
-          children: <Widget>[
-            BackgroundImage(),
-            type == "found"
-                ? FoundCard(foundModel: foundModel,myFound: true)
-                : OrderCard(missedModel: missedModel,type: missedModel.type,
+            (type == "accept" && missedModel == null)
+        ? Material(child: Center(child: CircularProgressIndicator()))
+        : Directionality(
+            textDirection: TextDirection.rtl,
+            child: Scaffold(
+              appBar: appBar(width),
+              body: Container(
+                child: Stack(
+                  children: <Widget>[
+                    BackgroundImage(),
+                    type == "found"
+                        ? FoundCard(foundModel: foundModel, myFound: true)
+                        : OrderCard(
+                            missedModel: missedModel,
+                            type: missedModel.type,
+                          ),
+                  ],
+                ),
+              ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 
   AppBar appBar(double width) {
-    return  AppBar(
-      title:Text(
+    return AppBar(
+      title: Text(
         type == "found"
             ? foundModel.name
             : missedModel.name == ""
-            ? "الاسم غير موجود"
-            : missedModel.name,
-        style:
-        TextStyle(color: Colors.black54, fontSize: width * .039),
+                ? "الاسم غير موجود"
+                : missedModel.name,
       ),
       actions: [
         Padding(

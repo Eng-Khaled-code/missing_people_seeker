@@ -11,14 +11,16 @@ class ErrorDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    bool isLargeDesignSize=Helper().getDesignSize(context)==Strings.largeDesign;
+    bool isLargeDesignSize =
+        Helper().getDesignSize(context) == Strings.largeDesign;
     return Dialog(
       backgroundColor: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Container(
         height: 270,
-        width: isLargeDesignSize?MediaQuery.of(context).size.width*.5:double.infinity,
+        width: isLargeDesignSize
+            ? MediaQuery.of(context).size.width * .5
+            : double.infinity,
         decoration: decoration(),
         child: Column(
           children: [
@@ -26,7 +28,7 @@ class ErrorDialog extends StatelessWidget {
             SizedBox(height: 20),
             messageWidget(),
             SizedBox(height: 20),
-           CancelButton()
+            CancelButton(textColor: Colors.white)
           ],
         ),
       ),
@@ -44,7 +46,6 @@ class ErrorDialog extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
-
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(15),
             topRight: Radius.circular(15),
@@ -59,7 +60,6 @@ class ErrorDialog extends StatelessWidget {
             size: 80,
           ),
           SizedBox(height: 20),
-
         ],
       ),
     );
@@ -67,9 +67,9 @@ class ErrorDialog extends StatelessWidget {
 
   Text messageWidget() {
     return Text(
-        message!,textAlign: TextAlign.center,
-        style: TextStyles.errorDialog,);
-
-    }
-
+      message!,
+      textAlign: TextAlign.center,
+      style: TextStyles.errorDialog,
+    );
+  }
 }

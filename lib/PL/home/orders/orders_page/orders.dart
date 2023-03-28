@@ -9,7 +9,7 @@ import 'order_about_my_be_missied.dart';
 
 // ignore: must_be_immutable
 class Orders extends StatefulWidget {
-   String selectedPage;
+  String selectedPage;
 
   Orders(this.selectedPage);
 
@@ -19,50 +19,55 @@ class Orders extends StatefulWidget {
 
 class _OrdersState extends State<Orders> {
   Color activeColor = Colors.white;
-  Color notActiveColor = Colors.grey;
+  Color notActiveColor = Colors.red;
 
   @override
   Widget build(BuildContext context) {
     UserChange user = Provider.of<UserChange>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-
-        title: Row(
-          children: <Widget>[
-            Expanded(
-              child: TextButton(
-                  onPressed: ()=>
-                    setState(()=>widget.selectedPage = "0"),
-                  child: Text("طلبات الفقد",
-                      style: TextStyle(
-                          color: widget.selectedPage == "0"
-                              ? activeColor
-                              : notActiveColor))),
-            ),
-            Expanded(
-                child: TextButton(
-                    onPressed: ()=>
-                      setState(()=>widget.selectedPage = "1"),
-                    child: Text("طلبات إيجاد",
-                        style: TextStyle(
-                            color: widget.selectedPage == "1"
-                                ? activeColor
-                                : notActiveColor))))
-          ],
-        ),
-      ),
-      body: user.userData == null
-          ? LoadingScreen(progressColor: Colors.blue,)
-          : Stack(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Row(
             children: <Widget>[
-              BackgroundImage(),
-              widget.selectedPage == "0"
-                  ? OrdersAboutMissing(user.userData!.id)
-                  : OrdersAboutMayBeMissed(user.userData!.id)
+              Expanded(
+                child: TextButton(
+                    onPressed: () => setState(() => widget.selectedPage = "0"),
+                    child: Text("طلبات الفقد",
+                        style: TextStyle(
+                            fontSize: 22,
+                            color: widget.selectedPage == "0"
+                                ? activeColor
+                                : notActiveColor))),
+              ),
+              Expanded(
+                  child: TextButton(
+                      onPressed: () =>
+                          setState(() => widget.selectedPage = "1"),
+                      child: Text("طلبات إيجاد",
+                          style: TextStyle(
+                              fontSize: 22,
+                              color: widget.selectedPage == "1"
+                                  ? activeColor
+                                  : notActiveColor))))
             ],
           ),
+        ),
+        body: user.userData == null
+            ? LoadingScreen(
+                progressColor: Colors.blue,
+              )
+            : Stack(
+                children: <Widget>[
+                  BackgroundImage(),
+                  widget.selectedPage == "0"
+                      ? OrdersAboutMissing(user.userData!.id)
+                      : OrdersAboutMayBeMissed(user.userData!.id)
+                ],
+              ),
+      ),
     );
   }
 }

@@ -11,6 +11,7 @@ import 'chat_card.dart';
 // ignore: must_be_immutable
 class AdminsChatList extends StatelessWidget {
   final String? userId;
+
   AdminsChatList({this.userId});
 
   Map<String, ChatModel> lastMessagesMap = Map();
@@ -27,8 +28,8 @@ class AdminsChatList extends StatelessWidget {
 
           lastMessagesMap[element] = _chatModel;
 //
-          int _count = await chat.loadUnSeenMessagesCount(
-              docId: _docId, userId: userId);
+          int _count =
+              await chat.loadUnSeenMessagesCount(docId: _docId, userId: userId);
 
           unSeenMessagesCountMap[element] = _count;
         }
@@ -41,64 +42,67 @@ class AdminsChatList extends StatelessWidget {
     ChatChange chat = Provider.of<ChatChange>(context);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    chat.loadMyAdminsIds(userId);
     lastMessages(chat);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "تواصل مع المسئولين",
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "تواصل مع المسئولين",
+          ),
         ),
-      ),
-      body: Container(
-        child: Stack(
-          children: <Widget>[
-            BackgroundImage(),
-            listBody(chat, width, height),
-          ],
+        body: Container(
+          child: Stack(
+            children: <Widget>[
+              BackgroundImage(),
+              listBody(chat, width, height),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget listBody(ChatChange chatChange, double width, double height) {
-    return
-      chatChange.adminsIds == null
-        ?
-    Center(child: CircularProgressIndicator())
-        :
-      chatChange.adminsIds!.isEmpty
-        ?
-      NoDataCard(msg: "حتي الان لا يوجد مسئولين عن طلباتك")
-        :
-      StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection(UserModel.USER_REF)
-                    .where(UserModel.ID, whereIn: chatChange.adminsIds)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  return
-                    !snapshot.hasData
-                      ?
-                    Center(child: CircularProgressIndicator())
-                      :
-                    snapshot.data!.size == 0
-                        ?
-                  NoDataCard(msg: "حتي الان لا يوجد مسئولين عن طلباتك")
-                          :
-                    ListView.builder(
-                              itemCount: snapshot.data!.size,
-                              itemBuilder: (context, position) {
-                                UserModel adminModel=UserModel.fromSnapshoot(snapshot.data!.docs[position].data() as DocumentSnapshot<Map<String,dynamic>> );
-                                return ChatCard(
-                                  userId: userId,
-                                  adminModel: adminModel,
-                                  chatChange: chatChange,
-                                  lastMessage: lastMessagesMap[adminModel.id],
-                                  unSeenMessagesCount: unSeenMessagesCountMap[adminModel.id],
-                                );
-                              },
-                              shrinkWrap: true);
-                });
+    return RefreshIndicator(
+        onRefresh: () async {
+          await chatChange.loadMyAdminsIds(userId);
+        },
+        child: SingleChildScrollView(
+          child: chatChange.adminsIds == null
+              ? Center(child: CircularProgressIndicator())
+              : chatChange.adminsIds!.isEmpty
+                  ? NoDataCard(msg: "حتي الان لا يوجد مسئولين عن طلباتك")
+                  : StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection(UserModel.USER_REF)
+                          .where(UserModel.ID, whereIn: chatChange.adminsIds)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        return !snapshot.hasData
+                            ? Center(child: CircularProgressIndicator())
+                            : snapshot.data!.size == 0
+                                ? NoDataCard(
+                                    msg: "حتي الان لا يوجد مسئولين عن طلباتك")
+                                : ListView.builder(
+                                    itemCount: snapshot.data!.size,
+                                    itemBuilder: (context, position) {
+                                      UserModel adminModel =
+                                          UserModel.fromSnapshoot(
+                                              snapshot.data!.docs[position]);
+                                      return ChatCard(
+                                        userId: userId,
+                                        adminModel: adminModel,
+                                        chatChange: chatChange,
+                                        lastMessage:
+                                            lastMessagesMap[adminModel.id],
+                                        unSeenMessagesCount:
+                                            unSeenMessagesCountMap[
+                                                adminModel.id],
+                                      );
+                                    },
+                                    shrinkWrap: true);
+                      }),
+        ));
   }
-
 }

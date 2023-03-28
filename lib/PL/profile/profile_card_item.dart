@@ -12,48 +12,38 @@ class CardItem extends StatelessWidget {
   final UserChange? userChange;
   String? data;
 
-
-   CardItem(
-      {Key? key, required this.title,this.data,this.userChange})
+  CardItem({Key? key, required this.title, this.data, this.userChange})
       : super(key: key);
 
-   IconData? cardIcon;
+  IconData? cardIcon;
   @override
   Widget build(BuildContext context) {
-  cardIcon=
-  title == "الاسم"
-      ? Icons.person
-      : title == "رقم الهاتف"
-      ? Icons.phone
-      : title == "الرقم القومي"
-      ? Icons.confirmation_num
-      : title == "الجنس"
-      ? Icons.group_add
-      : title == "العنوان"
-      ? Icons.location_on
-      : Icons.date_range;
+    cardIcon = title == "الاسم"
+        ? Icons.person
+        : title == "رقم الهاتف"
+            ? Icons.phone
+            : title == "الرقم القومي"
+                ? Icons.confirmation_num
+                : title == "الجنس"
+                    ? Icons.group_add
+                    : title == "العنوان"
+                        ? Icons.location_on
+                        : Icons.date_range;
 
-    title == "الجنس"
-        ? GenderRadioButtonState.gender = data:(){};
+    if (title == "الجنس") GenderRadioButtonState.gender = data;
 
     return InkWell(
-      onTap: () =>onPress(context),
+      onTap: () => onPress(context),
       child: Card(
-        margin: EdgeInsets.symmetric(horizontal: 16.0),
+        margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 1),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16.0,
-            vertical: 21.0
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 21.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Row(children: [
-                Icon(cardIcon,
-                  size: MediaQuery.of(context).size.width * .08,
-                  color: Colors.blue
-                ),
+                Icon(cardIcon, color: Colors.blue),
                 SizedBox(width: 24.0),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,10 +54,7 @@ class CardItem extends StatelessWidget {
                       style: TextStyles.title,
                     ),
                     SizedBox(height: 4.0),
-                    Text(
-                      "data",
-                      maxLines: 1
-                    ),
+                    Text(data!, maxLines: 1),
                   ],
                 ),
               ]),
@@ -114,15 +101,12 @@ class CardItem extends StatelessWidget {
           "/" +
           picked.day.toString();
 
-           await userChange!.updateUserField(field: UserModel.BIRTH_DATE,
-              value: _selectedBirthDate);
-
+      await userChange!.updateUserField(
+          field: UserModel.BIRTH_DATE, value: _selectedBirthDate);
     }
   }
 
   Future<void> updateToFirestore() async {
-
-  GenderRadioButtonState.gender = "ذكر";
     if (title == "الاسم") {
       List names = data!.trim().split(" ");
       String fName = names.first;
@@ -133,31 +117,24 @@ class CardItem extends StatelessWidget {
             )
           : "";
 
+      await userChange!.updateUserName(fName: fName, lName: lName);
+    }
+    {
+      if (title == "الجنس") {
+        data = GenderRadioButtonState.gender;
+      }
 
-      await userChange!
-          .updateUserName(fName: fName, lName: lName);
+      String field = title == "الرقم القومي"
+          ? UserModel.SSN
+          : title == "رقم الهاتف"
+              ? UserModel.PHONE_NUMBER
+              : title == "الجنس"
+                  ? UserModel.GENDER
+                  : title == "العنوان"
+                      ? UserModel.ADDRESS
+                      : "";
 
-    } else if (title == "الرقم القومي") {
-
-      String field= title == "الرقم القومي"?UserModel.SSN:title == "رقم الهاتف"
-          ?
-      UserModel.PHONE_NUMBER
-          :
-      title == "الجنس"
-          ?
-      UserModel.GENDER
-          :
-      title == "العنوان"
-          ?
-          UserModel.ADDRESS
-          :
-          ""
-      ;
-
-
-      await userChange!.updateUserField(field:field,
-          value: data);
-
+      await userChange!.updateUserField(field: field, value: data);
     }
   }
 
@@ -171,32 +148,30 @@ class CardItem extends StatelessWidget {
           builder: (context) {
             final _formKey = GlobalKey<FormState>();
 
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              title: Text("تعديل $title"),
-              content: Form(
-                  key: _formKey,
-                  child:
-                  title == "الجنس"
-                      ?
-                  GenderRadioButton()
-                      :
-                  buildTextFieldWidget()
+            return Directionality(
+              textDirection: TextDirection.rtl,
+              child: AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                title: Text("تعديل $title"),
+                content: Form(
+                    key: _formKey,
+                    child: title == "الجنس"
+                        ? GenderRadioButton()
+                        : buildTextFieldWidget()),
+                actions: <Widget>[
+                  TextButton(
+                      onPressed: () async {
+                        _formKey.currentState!.save();
+                        if (_formKey.currentState!.validate()) {
+                          Navigator.pop(context);
+                          await updateToFirestore();
+                        }
+                      },
+                      child: Text("تعديل")),
+                  CancelButton(),
+                ],
               ),
-              actions: <Widget>[
-                TextButton(
-                    onPressed: () async {
-                      _formKey.currentState!.save();
-                      if (_formKey.currentState!.validate()) {
-
-                        Navigator.pop(context);
-                        await updateToFirestore();
-                      }
-                    },
-                    child: Text("تعديل")),
-                CancelButton(),
-              ],
             );
           });
     }

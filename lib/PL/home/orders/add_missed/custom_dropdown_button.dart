@@ -20,15 +20,11 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
         children: [
           Text(
             widget.lable!,
-            style: TextStyle(
-              color: Colors.black54,
-            ),
           ),
           DropdownButton<String>(
             items: widget.items!
                 .map((item) => DropdownMenuItem(
-                      child:
-                          Text(item, style: TextStyle(fontSize: width * 0.033)),
+                      child: Text(item),
                       value: item,
                     ))
                 .toList(),

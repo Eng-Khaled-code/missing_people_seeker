@@ -45,10 +45,9 @@ class UserModel {
       this._type,
       this._connected);
 
-  factory UserModel.fromSnapshoot(
-      DocumentSnapshot<Map<String, dynamic>>? snapshot) {
+  factory UserModel.fromSnapshoot(DocumentSnapshot snapshot) {
     return UserModel(
-        snapshot!.get(ID),
+        snapshot.get(ID),
         snapshot.get(F_NAME),
         snapshot.get(L_NAME),
         snapshot.get(GENDER),

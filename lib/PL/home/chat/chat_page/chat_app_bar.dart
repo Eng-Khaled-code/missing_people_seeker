@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
-  ChatAppBar({Key? key,this.adminOpensChatPage,this.connectStatus,this.adminName,this.adminAvatar})
+  ChatAppBar(
+      {Key? key,
+      this.adminOpensChatPage,
+      this.connectStatus,
+      this.adminName,
+      this.adminAvatar})
       : super(key: key);
   final String? connectStatus;
   final String? adminName;
@@ -14,6 +19,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      centerTitle: true,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -21,22 +27,21 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
           connectStatus == "no"
               ? Container()
               : Text(
-            "متصل الان  ",
-            style: TextStyle(
-                fontSize: 11,
-                color: adminOpensChatPage == "yes"
-                    ?
-                Colors.green
-                    : Colors.grey),
-          ),
+                  "متصل الان  ",
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: adminOpensChatPage == "yes"
+                          ? Colors.green
+                          : Colors.grey),
+                ),
         ],
       ),
       actions: [
         Center(
             child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child:CircleAvatar(backgroundImage: NetworkImage(adminAvatar!))
-            )),
+                child:
+                    CircleAvatar(backgroundImage: NetworkImage(adminAvatar!)))),
         IconButton(
           icon: Icon(Icons.arrow_forward),
           onPressed: () => Navigator.pop(context),
@@ -44,4 +49,5 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
       ],
       automaticallyImplyLeading: false,
     );
-  }}
+  }
+}

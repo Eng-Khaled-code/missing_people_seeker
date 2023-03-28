@@ -17,33 +17,41 @@ class CustomStreamBuilder extends StatelessWidget {
   final String? mainOrderId;
   String? screenSizeDesign;
   CustomStreamBuilder(
-      {key,@required this.stream, @required this.page, this.mainOrderId}):super(key: key);
+      {key, @required this.stream, @required this.page, this.mainOrderId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    screenSizeDesign=Helper().getDesignSize(context);
+    screenSizeDesign = Helper().getDesignSize(context);
     double width = MediaQuery.of(context).size.width;
     return StreamBuilder<QuerySnapshot>(
         stream: stream,
         builder: (context, snapshot) {
-          return
-            !snapshot.hasData
-              ?
-            LoadingScreen(progressColor: Colors.blue,)
-              :
-            snapshot.data!.size == 0
-              ?
-            NoDataCard(msg:  page == "suggest" ? "لا توجد إقتراحات في الوقت الحالي" : "لا توجد طلبات")
+          return !snapshot.hasData
+              ? LoadingScreen(
+                  progressColor: Colors.blue,
+                )
+              : snapshot.data!.size == 0
+                  ? NoDataCard(
+                      msg: page == "suggest"
+                          ? "لا توجد إقتراحات في الوقت الحالي"
+                          : "لا توجد طلبات")
                   : GridView.builder(
-                      gridDelegate:  SliverGridDelegateWithMaxCrossAxisExtent(
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20,
-                      childAspectRatio:2,
-                      maxCrossAxisExtent: screenSizeDesign==Strings.smallDesign?width:width*.4
-                     ),
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          crossAxisSpacing: 20,
+                          mainAxisSpacing: 20,
+                          childAspectRatio:
+                              screenSizeDesign == Strings.smallDesign
+                                  ? 0.8
+                                  : 0.7,
+                          maxCrossAxisExtent:
+                              screenSizeDesign == Strings.smallDesign
+                                  ? width
+                                  : width * .4),
                       itemCount: snapshot.data!.size,
                       itemBuilder: (context, position) {
-                        MissedModel missedModel=MissedModel.fromSnapshoot(snapshot.data!.docs[position]);
+                        MissedModel missedModel = MissedModel.fromSnapshoot(
+                            snapshot.data!.docs[position]);
                         return OrderCard(
                           missedModel: missedModel,
                           type: page!,
@@ -53,6 +61,4 @@ class CustomStreamBuilder extends StatelessWidget {
                       shrinkWrap: true);
         });
   }
-
-
 }

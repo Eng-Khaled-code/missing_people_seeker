@@ -14,6 +14,7 @@ import '../../../utilites/text_style/text_styles.dart';
 import '../../../utilites/widgets/background_image.dart';
 import '../../../utilites/widgets/custom_text_field.dart';
 
+// ignore: must_be_immutable
 class AddMissed2 extends StatelessWidget {
   final File? imageFile;
   final String? addOrUpdate;
@@ -23,7 +24,7 @@ class AddMissed2 extends StatelessWidget {
   final String? type;
   final String? orderId;
 
-   String? lastPlace;
+  String? lastPlace;
   static String? faceColor;
   static String? hairColor;
   static String? eyeColor;
@@ -62,149 +63,156 @@ class AddMissed2 extends StatelessWidget {
 
     faceColor = addOrUpdate == "تعديل" ? faceColor : "اختر واحدة";
     hairColor = addOrUpdate == "تعديل" ? hairColor : "اختر واحدة";
-    eyeColor =addOrUpdate == "تعديل" ? eyeColor : "اختر واحدة";
+    eyeColor = addOrUpdate == "تعديل" ? eyeColor : "اختر واحدة";
 
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "$addOrUpdate" + " طلب " + "$type",
-            style: TextStyles.title,
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              "$addOrUpdate" + " طلب " + "$type",
+              style: TextStyles.title,
+            ),
           ),
-        ),
-        body: missedChange.isLoading
-            ? LoadingScreen(progressColor: Colors.blue)
-            : Container(
-                child:
-                    Stack(alignment: Alignment.center, children: <Widget>[
-                BackgroundImage(),
-                Form(
-                  key: _formKey,
-                  child: AnnotatedRegion<SystemUiOverlayStyle>(
-                    value: SystemUiOverlayStyle.light,
-                    child: GestureDetector(
-                      onTap: () => FocusScope.of(context).unfocus(),
-                      child: Container(
-                        height: double.infinity,
-                        child: SingleChildScrollView(
-                          physics: AlwaysScrollableScrollPhysics(),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 30.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CustomTextField(
-                                  label: "اخر مكان وجد به",
-                                  icon: Icons.location_on,
-                                  onSave:(value)=> lastPlace=value,
-                                  initialValue: lastPlace),
-                              SizedBox(height: 20.0),
-                              CustomTextField(
-                                  label: "الحالة الصحية",
-                                  icon: Icons.add_box,
-                                  onSave:(value)=> helthyStatus=value,
-                                  initialValue: helthyStatus),
-                              CustomDropdownButton(
-                                  items: faceColorList,
-                                  lable: "لون البشرة"),
-                              CustomDropdownButton(
-                                  items: hairColorList, lable: "لون الشعر"),
-                              CustomDropdownButton(
-                                  items: eyeColorList, lable: "لون العين"),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: CustomButton(
+          body: missedChange.isLoading
+              ? LoadingScreen(progressColor: Colors.blue)
+              : Container(
+                  child: Stack(alignment: Alignment.center, children: <Widget>[
+                  BackgroundImage(),
+                  Form(
+                    key: _formKey,
+                    child: AnnotatedRegion<SystemUiOverlayStyle>(
+                      value: SystemUiOverlayStyle.light,
+                      child: GestureDetector(
+                        onTap: () => FocusScope.of(context).unfocus(),
+                        child: Container(
+                          height: double.infinity,
+                          child: SingleChildScrollView(
+                            physics: AlwaysScrollableScrollPhysics(),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 30.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CustomTextField(
+                                    label: "اخر مكان وجد به",
+                                    icon: Icons.location_on,
+                                    onSave: (value) => lastPlace = value,
+                                    initialValue: lastPlace),
+                                SizedBox(height: 20.0),
+                                CustomTextField(
+                                    label: "الحالة الصحية",
+                                    icon: Icons.add_box,
+                                    onSave: (value) => helthyStatus = value,
+                                    initialValue: helthyStatus),
+                                CustomDropdownButton(
+                                    items: faceColorList, lable: "لون البشرة"),
+                                CustomDropdownButton(
+                                    items: hairColorList, lable: "لون الشعر"),
+                                CustomDropdownButton(
+                                    items: eyeColorList, lable: "لون العين"),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: CustomButton(
                                     text: "تسجيل",
-                                    onPress: () => onRegisterButtonPressed(missedChange, user,context),
-                                 ),
-                              ),
-                            ],
+                                    onPress: () => onRegisterButtonPressed(
+                                        missedChange, user, context),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ])));
+                ]))),
+    );
   }
 
-  onRegisterButtonPressed(MissedChange missedChange, UserChange user,BuildContext context) async {
+  onRegisterButtonPressed(
+      MissedChange missedChange, UserChange user, BuildContext context) async {
+    _formKey.currentState!.save();
+
     if (_formKey.currentState!.validate()) {
       if (faceColor == "اختر واحدة")
-        Fluttertoast.showToast(msg: "إختر لون البشرة",toastLength: Toast.LENGTH_LONG);
+        Fluttertoast.showToast(
+            msg: "إختر لون البشرة", toastLength: Toast.LENGTH_LONG);
       else if (hairColor == "اختر واحدة")
-        Fluttertoast.showToast(msg: "إختر لون الشعر",toastLength: Toast.LENGTH_LONG);
+        Fluttertoast.showToast(
+            msg: "إختر لون الشعر", toastLength: Toast.LENGTH_LONG);
       else if (eyeColor == "اختر واحدة")
-        Fluttertoast.showToast(msg: "إختر لون العين",toastLength: Toast.LENGTH_LONG);
+        Fluttertoast.showToast(
+            msg: "إختر لون العين", toastLength: Toast.LENGTH_LONG);
       else {
+        if (addOrUpdate == "تعديل") {
+          //updating
 
-            if (addOrUpdate == "تعديل") {
-              //updating
-
-              if (imageFile == null) {
-                if (!await missedChange.updateMissingOrderWithNoImage(
-                    id: orderId,
-                    gender: gender,
-                    name: fullName,
-                    age: age,
-                    eyeColor: eyeColor,
-                    faceColor: faceColor,
-                    hairColor: hairColor,
-                    helthStatus:helthyStatus,
-                    lastPlace: lastPlace)) {
-                  Fluttertoast.showToast(msg:error!);
-                } else {
-                  Fluttertoast.showToast(msg: "تم تعديل طلبك بنجاح");
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  Helper().goTo(context: context,to: Orders(type == "فقد" ? "0" : "1"));
-                }
-              } else {
-                if (!await missedChange.updateMissingOrderWithImage(
-                    id: orderId,
-                    type: type,
-                    gender: gender,
-                    name: fullName,
-                    age: age,
-                    eyeColor: eyeColor,
-                    faceColor: faceColor,
-                    hairColor: hairColor,
-                    helthStatus:helthyStatus,
-                    lastPlace: lastPlace,
-                    imageFile:imageFile)) {
-                  Fluttertoast.showToast(msg:error!);
-
-                } else {
-                  Fluttertoast.showToast(msg: "تم تعديل طلبك بنجاح");
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  Helper().goTo(context: context,to:Orders(type == "فقد" ? "0" : "1"));
-                }
-              }
+          if (imageFile == null) {
+            if (!await missedChange.updateMissingOrderWithNoImage(
+                id: orderId,
+                gender: gender,
+                name: fullName,
+                age: age,
+                eyeColor: eyeColor,
+                faceColor: faceColor,
+                hairColor: hairColor,
+                helthStatus: helthyStatus,
+                lastPlace: lastPlace)) {
+              Fluttertoast.showToast(msg: error!);
             } else {
-              //addition
-
-              if (!await missedChange.addMissingOrder(
-                  userId: user.userData!.id,
-                  type: type,
-                  gender: gender,
-                  name: fullName,
-                  age:age,
-                  eyeColor: eyeColor,
-                  faceColor: faceColor,
-                  hairColor: hairColor,
-                  helthStatus:helthyStatus,
-                  lastPlace: lastPlace,
-                  imageFile: imageFile)) {
-                Fluttertoast.showToast(msg:error!);
-
-              } else {
-                Fluttertoast.showToast(msg: "تم إضافة طلبك بنجاح");
-                Navigator.pop(context);
-                Navigator.pop(context);
-                Helper().goTo(context: context,to: Orders(type == "فقد" ? "0" : "1"));
-              }
+              Fluttertoast.showToast(msg: "تم تعديل طلبك بنجاح");
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Helper().goTo(
+                  context: context, to: Orders(type == "فقد" ? "0" : "1"));
             }
+          } else {
+            if (!await missedChange.updateMissingOrderWithImage(
+                id: orderId,
+                type: type,
+                gender: gender,
+                name: fullName,
+                age: age,
+                eyeColor: eyeColor,
+                faceColor: faceColor,
+                hairColor: hairColor,
+                helthStatus: helthyStatus,
+                lastPlace: lastPlace,
+                imageFile: imageFile)) {
+              Fluttertoast.showToast(msg: error!);
+            } else {
+              Fluttertoast.showToast(msg: "تم تعديل طلبك بنجاح");
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Helper().goTo(
+                  context: context, to: Orders(type == "فقد" ? "0" : "1"));
+            }
+          }
+        } else {
+          //addition
 
+          if (!await missedChange.addMissingOrder(
+              userId: user.userData!.id,
+              type: type,
+              gender: gender,
+              name: fullName,
+              age: age,
+              eyeColor: eyeColor,
+              faceColor: faceColor,
+              hairColor: hairColor,
+              helthStatus: helthyStatus,
+              lastPlace: lastPlace,
+              imageFile: imageFile)) {
+            Fluttertoast.showToast(msg: error!);
+          } else {
+            Fluttertoast.showToast(msg: "تم إضافة طلبك بنجاح");
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Helper()
+                .goTo(context: context, to: Orders(type == "فقد" ? "0" : "1"));
+          }
+        }
       }
     }
   }

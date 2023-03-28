@@ -8,21 +8,20 @@ class NotifyServices {
   late SharedPreferences prefs;
 
   Future<List<NotifyModel>> loadNotificationsList(String? userId) async {
-    List<NotifyModel>? notifyList;
-          QuerySnapshot snapshot=await firestore
-          .collection(NotifyModel.REF)
-          .doc(userId)
-          .collection(NotifyModel.SUB_COLLECTIN_REF)
-          .where(NotifyModel.USER_ID, isEqualTo: userId)
-          .get();
+    List<NotifyModel> notifyList = [];
+    QuerySnapshot snapshot = await firestore
+        .collection(NotifyModel.REF)
+        .doc(userId)
+        .collection(NotifyModel.SUB_COLLECTIN_REF)
+        .where(NotifyModel.USER_ID, isEqualTo: userId)
+        .get();
 
-    snapshot.docs.forEach((element){
+    snapshot.docs.forEach((element) {
       NotifyModel _notifyModel = NotifyModel.fromSnapshoot(element);
-      notifyList!.add(_notifyModel);
+      notifyList.add(_notifyModel);
     });
 
-      return notifyList!;
-
+    return notifyList;
   }
 
   Future<void> updateSeen({String? userId, String? notifyId}) async {
@@ -39,7 +38,6 @@ class NotifyServices {
       String? foundOrderId,
       String? secondUserImageUrl,
       String? foundName}) async {
-
     String docId = DateTime.now().millisecondsSinceEpoch.toString();
 
     Map<String, dynamic> values = {
@@ -63,22 +61,21 @@ class NotifyServices {
   }
 
   Future<void> deleteNotifys({String? userId, String? orderId}) async {
-   QuerySnapshot snapshot=  await firestore
+    QuerySnapshot snapshot = await firestore
         .collection(NotifyModel.REF)
         .doc(userId)
         .collection(NotifyModel.SUB_COLLECTIN_REF)
         .where("order_id", isEqualTo: orderId)
         .get();
 
-      snapshot.docs.forEach((element) async {
-        await firestore
-            .collection(NotifyModel.REF)
-            .doc(userId)
-            .collection(NotifyModel.SUB_COLLECTIN_REF)
-            .doc(element.get("notify_id"))
-            .delete();
-      });
-
+    snapshot.docs.forEach((element) async {
+      await firestore
+          .collection(NotifyModel.REF)
+          .doc(userId)
+          .collection(NotifyModel.SUB_COLLECTIN_REF)
+          .doc(element.get("notify_id"))
+          .delete();
+    });
   }
 
   Future<void> deleteNotifyById({String? userId, String? notifyId}) async {
@@ -93,19 +90,17 @@ class NotifyServices {
   Future<MissedModel> loadOrderData({String? orderId}) async {
     MissedModel _missedModel = MissedModel();
 
-    DocumentSnapshot snapshot=await firestore
-        .collection(MissedModel.REF)
-        .doc(orderId)
-        .get();
+    DocumentSnapshot snapshot =
+        await firestore.collection(MissedModel.REF).doc(orderId).get();
 
-      _missedModel = MissedModel.fromSnapshoot(snapshot);
+    _missedModel = MissedModel.fromSnapshoot(snapshot);
 
     return _missedModel;
   }
 
   Future<String> notifyCount({String? userId}) async {
     String _count = "";
-    String date=await loadLastDate(userId: userId);
+    String date = await loadLastDate(userId: userId);
 
     if (int.tryParse(date)! > 0)
       try {
@@ -150,7 +145,6 @@ class NotifyServices {
     }
     return _date;
   }
-
 
   Future<void> updateLastDate({String? userId}) async {
     DocumentSnapshot documentSnapshot =

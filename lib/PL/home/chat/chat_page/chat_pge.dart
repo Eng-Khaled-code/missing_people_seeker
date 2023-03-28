@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:finalmps/provider/chat_change.dart';
 
 import 'chat_app_bar.dart';
@@ -16,24 +15,24 @@ class ChatPage extends StatelessWidget {
       @required this.adminAvatar,
       @required this.adminName,
       @required this.adminId,
-      @required this.chatChange
-      });
+      @required this.chatChange});
 
   @override
   Widget build(BuildContext context) {
-    chatChange!.loadAdminOpensMyChatPage(
-       userId! + "&" + adminId!, adminId!);
+    chatChange!.loadAdminOpensMyChatPage(userId! + "&" + adminId!, adminId!);
     chatChange!.loadConnectStatus(adminId!);
-    return Scaffold(
-      appBar: ChatAppBar(
-        adminAvatar: adminAvatar,
-        adminName: adminName,
-        adminOpensChatPage: chatChange!.opensChatPage,
-        connectStatus: chatChange!.connectStatus,),
-      body: ChatScreenBody(
-          userId: userId,
-          adminId: adminId,
-          chatChange: chatChange),
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: ChatAppBar(
+          adminAvatar: adminAvatar,
+          adminName: adminName,
+          adminOpensChatPage: chatChange!.opensChatPage,
+          connectStatus: chatChange!.connectStatus,
+        ),
+        body: ChatScreenBody(
+            userId: userId, adminId: adminId, chatChange: chatChange),
+      ),
     );
   }
 }

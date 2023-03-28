@@ -8,13 +8,13 @@ class CustomButton extends StatefulWidget {
   final Color? textColor;
 
   CustomButton(
-      {this.color= const [
+      {this.color = const [
         Color(0xFF1E88E5),
         Color(0xFF0D47A1),
       ],
       @required this.text,
       required this.onPress,
-      this.textColor=Colors.white});
+      this.textColor = Colors.white});
 
   @override
   _CustomButtonState createState() => _CustomButtonState();
@@ -50,7 +50,7 @@ class _CustomButtonState extends State<CustomButton>
   Widget build(BuildContext context) {
     _scale = 1 - _controller!.value;
 
-    return GestureDetector(
+    return InkWell(
       onTapDown: _onTapDown,
       onTapUp: _onTapUp,
       onTap: widget.onPress,

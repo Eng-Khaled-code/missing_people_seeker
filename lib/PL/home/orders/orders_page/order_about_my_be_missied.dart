@@ -3,8 +3,6 @@ import 'package:finalmps/PL/home/orders/orders_page/custom_streem_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finalmps/models/missed_model.dart';
 import 'package:finalmps/models/user_model.dart';
-import 'package:provider/provider.dart';
-import 'package:finalmps/provider/user_change.dart';
 
 class OrdersAboutMayBeMissed extends StatelessWidget {
   final String userId;
@@ -13,8 +11,6 @@ class OrdersAboutMayBeMissed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserChange user = Provider.of<UserChange>(context);
-
     return Directionality(
         textDirection: TextDirection.rtl,
         child: CustomStreamBuilder(

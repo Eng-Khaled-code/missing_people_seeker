@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:finalmps/models/missed_model.dart';
 
 class NotifyModel {
   static const REF = "notify";

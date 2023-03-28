@@ -1,4 +1,3 @@
-
 import 'package:finalmps/provider/missed_change.dart';
 import 'package:flutter/material.dart';
 import 'package:finalmps/models/notify_model.dart';
@@ -11,11 +10,12 @@ import '../../utilites/widgets/no_data_card.dart';
 import '../home_page/home_app_bar.dart';
 import 'notification_card.dart';
 
+// ignore: must_be_immutable
 class NotificationPage extends StatelessWidget {
   final String? userId;
   final NotifyChange? notifyChange;
 
-  NotificationPage({this.userId,this.notifyChange});
+  NotificationPage({this.userId, this.notifyChange});
 
   Map<String, MissedModel> _notificationsOrderDataMap = Map();
 
@@ -35,33 +35,36 @@ class NotificationPage extends StatelessWidget {
     }
   }
 
-  loadNotificationsAndCount() async {
-    await notifyChange!.loadNotifications(userId: userId);
-    await notifyChange!.loadNotifyCount(userId: userId);
-  }
-
   @override
   Widget build(BuildContext context) {
     MissedChange missedChange = Provider.of<MissedChange>(context);
-    loadNotificationsAndCount();
-    loadOrderDataMap( missedChange);
-    return Scaffold(
-      appBar: HomeAppBar(title: "الإشعارات",notifyChange: notifyChange),
-      body: Stack(
-        children: <Widget>[
-         BackgroundImage(),
-          listBody(
+    loadOrderDataMap(missedChange);
+
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: HomeAppBar(
+          title: "الإشعارات",
+          notifyChange: notifyChange,
+          userId: userId,
+        ),
+        body: Stack(
+          children: <Widget>[
+            BackgroundImage(),
+            listBody(
               missedChange: missedChange,
               context: context,
             ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget listBody(
-      {BuildContext? context,
-      MissedChange? missedChange,}) {
+  Widget listBody({
+    BuildContext? context,
+    MissedChange? missedChange,
+  }) {
     return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection(NotifyModel.REF)
@@ -70,35 +73,28 @@ class NotificationPage extends StatelessWidget {
             .where(NotifyModel.USER_ID, isEqualTo: userId)
             .snapshots(),
         builder: (context, snapshot) {
-          return
-            !snapshot.hasData ||
+          return !snapshot.hasData ||
                   notifyChange!.lastDate == null ||
                   _notificationsOrderDataMap == null
-              ?
-            Center(child: CircularProgressIndicator())
-              :
-            snapshot.data!.size == 0
-                  ?
-            NoDataCard(msg: "لا توجد إشعارات")
-                  :
-            ListView.builder(
+              ? Center(child: CircularProgressIndicator())
+              : snapshot.data!.size == 0
+                  ? NoDataCard(msg: "لا توجد إشعارات")
+                  : ListView.builder(
                       itemCount: snapshot.data!.size,
                       itemBuilder: (context, position) {
                         List<QueryDocumentSnapshot> data = snapshot.data!.docs;
-                        NotifyModel model=NotifyModel.fromSnapshoot(
-                            data[position]);
+                        NotifyModel model =
+                            NotifyModel.fromSnapshoot(data[position]);
                         return NotifyCard(
                           userId: userId,
                           notifyChange: notifyChange,
                           missedChange: missedChange,
-                          notifyModel:  model,
-                          missedModel:_notificationsOrderDataMap[
-                        model.id],);
+                          notifyModel: model,
+                          missedModel: _notificationsOrderDataMap[model.id],
+                        );
                       },
                       reverse: true,
                       shrinkWrap: true);
         });
-
   }
-
 }

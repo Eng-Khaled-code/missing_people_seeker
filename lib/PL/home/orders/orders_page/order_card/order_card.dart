@@ -1,4 +1,3 @@
-
 import 'package:finalmps/PL/home/orders/orders_page/order_card/status_row.dart';
 import 'package:finalmps/models/missed_model.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +8,15 @@ import 'bottom_sheet.dart';
 import 'card_details.dart';
 import 'date_widget.dart';
 
+// ignore: must_be_immutable
 class OrderCard extends StatelessWidget {
-  OrderCard({key,this.missedModel, this.mainOrderId="", this.type}):super(key: key);
+  OrderCard({key, this.missedModel, this.mainOrderId = "", this.type})
+      : super(key: key);
 
   // mainOrderId for the missing order not my be missed that i pass it from the suggestion page  when the suggestion is true
   final String? mainOrderId;
   final MissedModel? missedModel;
-   final String? type;
+  final String? type;
 
   TextStyle textStyle = TextStyle(color: Colors.white);
 
@@ -26,9 +27,7 @@ class OrderCard extends StatelessWidget {
     return InkWell(
       onTap: () {
         if (type == "missed" || type == "mayBe")
-          showCustomBottomSheet(
-              context: context,
-              missedChange: missedChange);
+          showCustomBottomSheet(context: context, missedChange: missedChange);
         else if (type == "suggest") {
           onPressSuggestionTrue(
             context: context,
@@ -44,13 +43,23 @@ class OrderCard extends StatelessWidget {
           padding: EdgeInsets.all(5.0),
           child: Column(
             children: [
-              DateWidget(publishDate: missedModel!.publishDate,textStyle: textStyle,),
+              DateWidget(
+                publishDate: missedModel!.publishDate,
+                textStyle: textStyle,
+              ),
               SizedBox(height: 10),
               image(),
               SizedBox(height: 10.0),
-              type == "suggest" ? Container() : StatusRow(status: missedModel!.status,textStyle: textStyle,),
-              SizedBox(height: 10.0),
-              CardDetailsTable(missedModel: missedModel,textStyle: textStyle,)
+              type == "suggest"
+                  ? Container()
+                  : StatusRow(
+                      status: missedModel!.status,
+                      textStyle: textStyle,
+                    ),
+              CardDetailsTable(
+                missedModel: missedModel,
+                textStyle: textStyle,
+              )
             ],
           ),
         ),
@@ -58,37 +67,46 @@ class OrderCard extends StatelessWidget {
     );
   }
 
-  onPressSuggestionTrue({BuildContext? context, MissedChange? missedChange,}) {
+  onPressSuggestionTrue({
+    BuildContext? context,
+    MissedChange? missedChange,
+  }) {
     showDialog(
         context: context!,
-        builder: (context) =>AcceptDialog(missedOrderId: mainOrderId,mayBeMissedOrderId: missedModel!.id,missedChange: missedChange,));
+        builder: (context) => AcceptDialog(
+              missedOrderId: mainOrderId,
+              mayBeMissedOrderId: missedModel!.id,
+              missedChange: missedChange,
+            ));
   }
 
-  showCustomBottomSheet({BuildContext? context, MissedChange? missedChange,}) {
+  showCustomBottomSheet({
+    BuildContext? context,
+    MissedChange? missedChange,
+  }) {
     showModalBottomSheet(
         isDismissible: true,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         context: context!,
         builder: (context) {
-          return CardBottomSheet(missedChange: missedChange,
-              missedModel: missedModel,type: type);
-  });}
+          return CardBottomSheet(
+              missedChange: missedChange, missedModel: missedModel, type: type);
+        });
+  }
 
   ClipRRect image() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: FadeInImage.assetNetwork(
-
-        placeholder:'assets/images/glow.gif' ,
-        imageErrorBuilder:(e,r,t)=> Image.asset(
+        placeholder: 'assets/images/glow.gif',
+        imageErrorBuilder: (e, r, t) => Image.asset(
           "assets/images/errorimage.png",
           fit: BoxFit.fill,
-        ),image: missedModel!.imageUrl,
+        ),
+        image: missedModel!.imageUrl,
         width: double.infinity,
-        height: 300,
+        height: 250,
         fit: BoxFit.fill,
-
-
       ),
     );
   }
@@ -110,5 +128,4 @@ class OrderCard extends StatelessWidget {
           )
         ]);
   }
-
 }

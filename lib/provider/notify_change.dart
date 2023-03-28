@@ -18,26 +18,21 @@ class NotifyChange with ChangeNotifier {
   List<NotifyModel>? notificationsList;
 
   Future<void> loadNotifications({String? userId}) async {
-    try{
-
-        notificationsList = await _notifyServices.loadNotificationsList(userId);
-        notifyListeners();
-    }
-    on FirebaseException catch(e){
-      Fluttertoast.showToast(msg: e.message!,toastLength: Toast.LENGTH_LONG);
+    try {
+      notificationsList = await _notifyServices.loadNotificationsList(userId);
+      notifyListeners();
+    } on FirebaseException catch (e) {
+      Fluttertoast.showToast(msg: e.message!, toastLength: Toast.LENGTH_LONG);
     }
   }
 
   Future<void> updateSeen({String? userId, String? notifyId}) async {
     try {
       // refuse order value 2
-      await _notifyServices
-          .updateSeen(userId: userId, notifyId: notifyId);
+      await _notifyServices.updateSeen(userId: userId, notifyId: notifyId);
       notifyListeners();
-
-    } on FirebaseException catch(e) {
-      Fluttertoast.showToast(msg: e.message!,toastLength: Toast.LENGTH_LONG);
-
+    } on FirebaseException catch (e) {
+      Fluttertoast.showToast(msg: e.message!, toastLength: Toast.LENGTH_LONG);
     }
   }
 
@@ -52,9 +47,8 @@ class NotifyChange with ChangeNotifier {
     }
   }
 
-  Future<void> loadNotifyCount({String? userId, String? date}) async {
-    notifyCount =
-        await _notifyServices.notifyCount(userId: userId);
+  Future<void> loadNotifyCount({String? userId}) async {
+    notifyCount = await _notifyServices.notifyCount(userId: userId);
     notifyListeners();
   }
 
@@ -80,28 +74,27 @@ class NotifyChange with ChangeNotifier {
 
   Future<bool> deleteNotifyByOrder({String? userId, String? orderId}) async {
     try {
+      await _notifyServices.deleteNotifys(userId: userId, orderId: orderId);
 
-      await _notifyServices
-          .deleteNotifys(userId: userId, orderId: orderId);
-
-      Fluttertoast.showToast(msg: "تم حذف الاشعار بالفعل", toastLength: Toast.LENGTH_LONG);
+      Fluttertoast.showToast(
+          msg: "تم حذف الاشعار بالفعل", toastLength: Toast.LENGTH_LONG);
       return true;
-    } on FirebaseException catch(e) {
-      Fluttertoast.showToast(msg: e.message!,toastLength: Toast.LENGTH_LONG);
+    } on FirebaseException catch (e) {
+      Fluttertoast.showToast(msg: e.message!, toastLength: Toast.LENGTH_LONG);
       return false;
     }
   }
 
-  Future<void> deleteNotifyByNotifyId({String? userId, String? notifyId}) async {
+  Future<void> deleteNotifyByNotifyId(
+      {String? userId, String? notifyId}) async {
     try {
-      await _notifyServices
-          .deleteNotifyById(userId: userId, notifyId: notifyId);
+      await _notifyServices.deleteNotifyById(
+          userId: userId, notifyId: notifyId);
 
-        Fluttertoast.showToast(msg: "تم حذف الاشعار بالفعل", toastLength: Toast.LENGTH_LONG);
-      } on FirebaseException catch(e) {
-        Fluttertoast.showToast(msg: e.message!,toastLength: Toast.LENGTH_LONG);
-
-      }
+      Fluttertoast.showToast(
+          msg: "تم حذف الاشعار بالفعل", toastLength: Toast.LENGTH_LONG);
+    } on FirebaseException catch (e) {
+      Fluttertoast.showToast(msg: e.message!, toastLength: Toast.LENGTH_LONG);
+    }
   }
-
 }

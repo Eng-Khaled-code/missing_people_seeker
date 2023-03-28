@@ -19,9 +19,6 @@ class GenderRadioButtonState extends State<GenderRadioButton> {
           SizedBox(width: 10.0),
           Text(
             "الجنس",
-            style: TextStyle(
-                fontSize: MediaQuery.of(context).size.width * 0.035,
-                color: Colors.black54),
           ),
         ],
       ),

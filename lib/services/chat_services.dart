@@ -72,17 +72,15 @@ class ChatServices {
     List<String> _adminsId = [];
 
     //getting  missed orders and my be missed orders that they are not in the waitting list
-    await _firestore
+    QuerySnapshot snapshot = await _firestore
         .collection(MissedModel.REF)
         .where(UserModel.ID, isEqualTo: userId)
         .where(MissedModel.STATUS, isNotEqualTo: "0")
-        .get()
-        .then((snapshot1) {
-      snapshot1.docs.forEach((element) async {
-        //getting admins id that they responsible for my orders
-        if (!_adminsId.contains(element.get(MissedModel.ADMIN_ID)))
-          _adminsId.add(element.get(MissedModel.ADMIN_ID));
-      });
+        .get();
+    snapshot.docs.forEach((element) async {
+      //getting admins id that they responsible for my orders
+      if (!_adminsId.contains(element.get(MissedModel.ADMIN_ID)))
+        _adminsId.add(element.get(MissedModel.ADMIN_ID));
     });
 
     return _adminsId;

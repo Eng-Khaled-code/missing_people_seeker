@@ -10,7 +10,7 @@ class ChatChange with ChangeNotifier {
   String connectStatus = "";
   String opensChatPage = "";
 
-  ChatChange.initialize() {}
+  ChatChange.initialize();
 
   //int _recentMessagesCount = 0;
 
@@ -59,8 +59,7 @@ class ChatChange with ChangeNotifier {
 
   Future<void> updateToSeen({String? chatId, String? adminId}) async {
     try {
-      await _chatServices
-          .updateToSeen(chatId: chatId, adminId: adminId);
+      await _chatServices.updateToSeen(chatId: chatId, adminId: adminId);
       notifyListeners();
     } catch (ex) {
       notifyListeners();
@@ -123,5 +122,4 @@ class ChatChange with ChangeNotifier {
   //   _lastDate = await _chatServices.loadLastDate(userId: userId);
   //   notifyListeners();
   // }
-
 }

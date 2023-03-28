@@ -1,14 +1,13 @@
 import 'package:finalmps/models/missed_model.dart';
 import 'package:finalmps/services/search_services.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:finalmps/PL/home/orders/orders_page/order_card/order_suggestions.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class SearchChange with ChangeNotifier {
   bool isLoading = false;
   List<String> _suggestedOrdersIds = [];
 
-  SearchChange.initialize() {}
+  SearchChange.initialize();
 
   SearchServices _searchServices = SearchServices();
 
@@ -19,17 +18,16 @@ class SearchChange with ChangeNotifier {
       notifyListeners();
 
       // refuse order value 2
-      await _searchServices
-          .updateSuggestionsToNo(
-              collection: MissedModel.REF,
-              orderId: orderId,
-              ordersIds: ordersIds);
+      await _searchServices.updateSuggestionsToNo(
+          collection: MissedModel.REF, orderId: orderId, ordersIds: ordersIds);
       isLoading = false;
       notifyListeners();
-      Fluttertoast.showToast(msg: "سوف نقوم بإرسال إقتراحات جديدة لك عند توفر المعلومات المطلوبة",toastLength: Toast.LENGTH_LONG);
-
+      Fluttertoast.showToast(
+          msg: "سوف نقوم بإرسال إقتراحات جديدة لك عند توفر المعلومات المطلوبة",
+          toastLength: Toast.LENGTH_LONG);
     } catch (ex) {
-     Fluttertoast.showToast(msg:ex.toString(),toastLength: Toast.LENGTH_LONG);
+      Fluttertoast.showToast(
+          msg: ex.toString(), toastLength: Toast.LENGTH_LONG);
       isLoading = false;
       notifyListeners();
     }
