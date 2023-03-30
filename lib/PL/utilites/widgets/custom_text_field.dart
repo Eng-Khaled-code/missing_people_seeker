@@ -35,7 +35,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             initialValue:widget.initialValue,
             maxLines:widget.label==""||widget.label=="العنوان"?3:1,
             keyboardType: widget.textInputType,
-            obscureText: widget.label=="كلمةالمرور"?hidePass:false,
+            obscureText: widget.label=="كلمة المرور"?hidePass:false,
             validator:(value){
 
               bool isNumber;
