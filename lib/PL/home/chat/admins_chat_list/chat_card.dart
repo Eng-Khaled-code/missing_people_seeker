@@ -69,32 +69,26 @@ class ChatCard extends StatelessWidget {
   }
 
   Widget unSeenMessagesCountWidget({double? width}) {
-    return unSeenMessagesCount == null
-        ? Container(
-            width: width! * .04,
-            height: width * .04,
-            child: Center(child: CircularProgressIndicator(strokeWidth: .7)),
-          )
-        : unSeenMessagesCount == 0
-            ? Container()
-            : Container(
-                width: width! * .04,
-                height: width * .04,
-                child: CircleAvatar(
-                  backgroundColor: Colors.lightBlueAccent,
-                  child: Text(
-                      unSeenMessagesCount! > 99
-                          ? "+99"
-                          : unSeenMessagesCount.toString(),
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: unSeenMessagesCount! > 9
-                              ? width * .034
-                              : unSeenMessagesCount! > 99
-                                  ? width * .028
-                                  : width * .04)),
-                ),
-              );
+    return CircleAvatar(
+      backgroundColor: (unSeenMessagesCount !=null&&unSeenMessagesCount!=0)?Colors.green:Colors.transparent,
+              child: unSeenMessagesCount == null
+                  ?
+              CircularProgressIndicator(strokeWidth: .7)
+                  :
+              unSeenMessagesCount == 0
+                  ?
+              Container(color: Colors.transparent,):Text(
+                  unSeenMessagesCount! > 99
+                      ? "+99"
+                      : unSeenMessagesCount.toString(),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: unSeenMessagesCount! > 9
+                          ? width! * .034
+                          : unSeenMessagesCount! > 99
+                              ? width! * .028
+                              : width! * .04)),
+            );
   }
 
   onTap(BuildContext context) async {
@@ -108,10 +102,15 @@ class ChatCard extends StatelessWidget {
             chatChange: chatChange));
 
     String chatId = userId! + "&" + adminModel!.id;
+
     if (!await chatChange!.openChatPage(chatId: chatId, userId: userId)) {
       await chatChange!
           .firstOpenOrClose(open: "yes", chatId: chatId, userId: userId);
     }
+chatChange!.loadInputStatus(userId!, adminId!);
+ chatChange!.loadAdminOpensMyChatPage(chatId , adminId!);
+    chatChange!.loadConnectStatus(adminId!);
+
   }
 
   Stack image() {

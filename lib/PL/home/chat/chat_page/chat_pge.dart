@@ -16,11 +16,11 @@ class ChatPage extends StatelessWidget {
       @required this.adminName,
       @required this.adminId,
       @required this.chatChange});
+final TextEditingController messageEditingController=TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    chatChange!.loadAdminOpensMyChatPage(userId! + "&" + adminId!, adminId!);
-    chatChange!.loadConnectStatus(adminId!);
+   
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -31,7 +31,7 @@ class ChatPage extends StatelessWidget {
           connectStatus: chatChange!.connectStatus,
         ),
         body: ChatScreenBody(
-            userId: userId, adminId: adminId, chatChange: chatChange),
+            userId: userId, adminId: adminId, chatChange: chatChange,messageEditingController: messageEditingController),
       ),
     );
   }

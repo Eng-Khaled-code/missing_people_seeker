@@ -16,17 +16,18 @@ class ChatScreenBody extends StatelessWidget {
     @required this.userId,
     @required this.adminId,
     @required this.chatChange,
+   this.messageEditingController
   });
 
   final ScrollController listScrollController = ScrollController();
+  final TextEditingController? messageEditingController;
 
   var listMessages;
 
   @override
   Widget build(BuildContext context) {
-    chatChange!.loadInputStatus(userId!, adminId!);
-    chatChange!.loadAdminOpensMyChatPage(userId! + "&" + adminId!, adminId!);
-    chatChange!.loadConnectStatus(adminId!);
+    
+    
     chatChange!
         .updateToSeen(chatId: userId! + "&" + adminId!, adminId: adminId);
 
@@ -66,7 +67,7 @@ class ChatScreenBody extends StatelessWidget {
                             chatChange: chatChange,
                             userId: userId,
                             adminId: adminId,
-                            listScrollController: listScrollController),
+                            listScrollController: listScrollController,messageEditingController: messageEditingController),
               ],
             ),
           ],

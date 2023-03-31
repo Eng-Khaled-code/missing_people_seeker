@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class InputMessage extends StatelessWidget {
-   InputMessage({Key? key ,this.chatChange,this.userId,this.adminId,this.listScrollController}) : super(key: key);
+   InputMessage({Key? key ,this.chatChange,this.userId,this.adminId,this.listScrollController,this.messageEditingController}) : super(key: key);
+  final TextEditingController? messageEditingController;
 
-  final TextEditingController messageEditingController =
-  TextEditingController();
   final FocusNode focusNode = FocusNode();
   final ChatChange? chatChange;
   final String? userId;
@@ -59,13 +58,13 @@ class InputMessage extends StatelessWidget {
 
 onSendMessage() async {
       if (messageEditingController.text != "") {
-        messageEditingController.clear();
-
+        
         chatChange!.sendMessage(
             userId: userId,
             message: messageEditingController.text,
             chatID: userId! + "&" + adminId!,
             seen:chatChange!.opensChatPage=="yes"&&chatChange!.connectStatus=="yes"?"yes":"no" );
+messageEditingController.clear();
 
         listScrollController!.animateTo(0.0,
             duration: Duration(milliseconds: 300), curve: Curves.easeOut);
